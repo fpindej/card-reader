@@ -1,13 +1,13 @@
 using Serilog;
-using LoggerConfigurationExtensions = WebApiTemplate.Logging.Extensions.LoggerConfigurationExtensions;
+using LoggerConfigurationExtensions = CardReader.Logging.Extensions.LoggerConfigurationExtensions;
 
-namespace WebApiTemplate.WebApi;
+namespace CardReader.WebApi;
 
 public static class Program
 {
     public static async Task<int> Main()
     {
-        const string appName = "WebApiTemplate";
+        const string appName = "CardReader";
         var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         LoggerConfigurationExtensions.SetupLogger(environmentName);
 

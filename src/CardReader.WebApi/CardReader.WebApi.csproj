@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebApiTemplate.Logging\WebApiTemplate.Logging.csproj" />
+      <ProjectReference Include="..\CardReader.Logging\CardReader.Logging.csproj" />
     </ItemGroup>
 
 </Project>

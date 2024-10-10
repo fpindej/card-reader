@@ -1,6 +1,6 @@
 using Serilog;
 
-namespace WebApiTemplate.WebApi;
+namespace CardReader.WebApi;
 
 public class Startup
 {

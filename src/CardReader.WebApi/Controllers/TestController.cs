@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebApiTemplate.WebApi.Controllers;
+namespace CardReader.WebApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]

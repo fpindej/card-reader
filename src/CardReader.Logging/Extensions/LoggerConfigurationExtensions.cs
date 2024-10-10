@@ -2,7 +2,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 
-namespace WebApiTemplate.Logging.Extensions;
+namespace CardReader.Logging.Extensions;
 
 public static class LoggerConfigurationExtensions
 {

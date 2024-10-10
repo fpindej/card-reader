@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiTemplate.WebApi", "WebApiTemplate.WebApi\WebApiTemplate.WebApi.csproj", "{8A49FD2E-9F22-4C71-9E0E-FC0E88268943}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardReader.WebApi", "CardReader.WebApi\CardReader.WebApi.csproj", "{8A49FD2E-9F22-4C71-9E0E-FC0E88268943}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiTemplate.Logging", "WebApiTemplate.Logging\WebApiTemplate.Logging.csproj", "{2E35587B-FD93-41F3-83F8-CADA304B4FAA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardReader.Logging", "CardReader.Logging\CardReader.Logging.csproj", "{2E35587B-FD93-41F3-83F8-CADA304B4FAA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "host", "host", "{0D9F29B4-AA23-4220-A705-42E4225E65D7}"
 EndProject
