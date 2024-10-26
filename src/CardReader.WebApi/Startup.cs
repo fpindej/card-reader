@@ -1,3 +1,4 @@
+using CardReader.Infrastructure.Extensions;
 using CardReader.Infrastructure.Persistence.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
@@ -26,6 +27,9 @@ public class Startup
 
         Log.Debug("ConfigureServices => Setting AddSwaggerGen");
         services.AddSwaggerGen();
+        
+        Log.Debug("ConfigureServices => Setting infrastructure layer");
+        services.AddInfrastructure();
 
         Log.Debug("ConfigureServices => Setting database persistence layer");
         services.AddPersistence(_configuration);

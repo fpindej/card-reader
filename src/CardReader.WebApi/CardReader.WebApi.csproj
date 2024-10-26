@@ -21,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CardReader.Infrastructure.Persistence\CardReader.Infrastructure.Persistence.csproj" />
+      <ProjectReference Include="..\CardReader.Infrastructure\CardReader.Infrastructure.csproj" />
       <ProjectReference Include="..\CardReader.Logging\CardReader.Logging.csproj" />
     </ItemGroup>
 
