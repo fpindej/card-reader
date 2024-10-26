@@ -33,6 +33,7 @@ public static class Program
     private static IHostBuilder CreateHostBuilder()
     {
         return Host.CreateDefaultBuilder()
+            .UseContentRoot(AppContext.BaseDirectory)
             .UseSerilog(Log.Logger, dispose: true)
             .ConfigureAppConfiguration((context, config) =>
             {

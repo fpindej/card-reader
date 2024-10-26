@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 
 namespace CardReader.WebApi;
@@ -22,16 +23,21 @@ public class Startup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+            
+            Log.Debug("Setting UseSwagger");
+            app.UseSwagger();
+
+            Log.Debug("Setting UseSwaggerUI");
+            app.UseSwaggerUI();
+            
             if (env.IsDevelopment())
             {
                 Log.Debug("Setting UseDeveloperExceptionPage");
                 app.UseDeveloperExceptionPage();
-
-                Log.Debug("Setting UseSwagger");
-                app.UseSwagger();
-
-                Log.Debug("Setting UseSwaggerUI");
-                app.UseSwaggerUI();
             }
 
             Log.Debug("Setting cors => allow *");
