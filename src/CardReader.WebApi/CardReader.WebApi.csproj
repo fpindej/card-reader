@@ -20,6 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\CardReader.Infrastructure.Persistence\CardReader.Infrastructure.Persistence.csproj" />
       <ProjectReference Include="..\CardReader.Logging\CardReader.Logging.csproj" />
     </ItemGroup>
 

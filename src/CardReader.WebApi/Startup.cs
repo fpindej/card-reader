@@ -1,3 +1,4 @@
+using CardReader.Infrastructure.Persistence.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 
@@ -5,6 +6,13 @@ namespace CardReader.WebApi;
 
 public class Startup
 {
+    private readonly IConfiguration _configuration;
+
+    public Startup(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     public void ConfigureServices(IServiceCollection services)
     {
         Log.Debug("ConfigureServices => Setting AddControllers");
@@ -18,6 +26,9 @@ public class Startup
 
         Log.Debug("ConfigureServices => Setting AddSwaggerGen");
         services.AddSwaggerGen();
+
+        Log.Debug("ConfigureServices => Setting database persistence layer");
+        services.AddPersistence(_configuration);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -38,6 +49,9 @@ public class Startup
             {
                 Log.Debug("Setting UseDeveloperExceptionPage");
                 app.UseDeveloperExceptionPage();
+                
+                Log.Debug("Applying migrations");
+                app.ApplyMigrations();
             }
 
             Log.Debug("Setting cors => allow *");
