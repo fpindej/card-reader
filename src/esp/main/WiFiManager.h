@@ -6,7 +6,6 @@ class WiFiManager
 public:
     static void connect();
     static bool isConnected();
-    static void reconnectIfNeeded();
 
 private:
     static const char* ssid;

@@ -10,7 +10,7 @@ void WiFiManager::connect()
     Serial.print(ssid);
     WiFi.begin(ssid, password);
 
-    while (WiFi.status() != WL_CONNECTED) 
+    while (!isConnected()) 
     {
         delay(500);
         Serial.print(".");
@@ -20,12 +20,4 @@ void WiFiManager::connect()
 
 bool WiFiManager::isConnected() {
     return WiFi.status() == WL_CONNECTED;
-}
-
-void WiFiManager::reconnectIfNeeded() 
-{
-    if (WiFi.status() != WL_CONNECTED) 
-    {
-        connect();
-    }
 }
