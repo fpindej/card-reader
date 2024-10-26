@@ -49,13 +49,13 @@ public class Startup
             Log.Debug("Setting UseSwaggerUI");
             app.UseSwaggerUI();
             
+            Log.Debug("Applying migrations");
+            app.ApplyMigrations();
+            
             if (env.IsDevelopment())
             {
                 Log.Debug("Setting UseDeveloperExceptionPage");
                 app.UseDeveloperExceptionPage();
-                
-                Log.Debug("Applying migrations");
-                app.ApplyMigrations();
             }
 
             Log.Debug("Setting cors => allow *");
