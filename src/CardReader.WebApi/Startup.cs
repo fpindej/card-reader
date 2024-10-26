@@ -47,7 +47,20 @@ public class Startup
             app.UseSwagger();
 
             Log.Debug("Setting UseSwaggerUI");
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CardReader API V1");
+                c.DocumentTitle = "Card Reader API Documentation";
+                c.RoutePrefix = "swagger";
+            });
+
+            Log.Debug("Setting UseRedoc");
+            app.UseReDoc(c =>
+            {
+                c.SpecUrl("/swagger/v1/swagger.json");
+                c.DocumentTitle = "Card Reader API Documentation";
+                c.RoutePrefix = "redoc";
+            });
             
             Log.Debug("Applying migrations");
             app.ApplyMigrations();
