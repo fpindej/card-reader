@@ -1,0 +1,1 @@
+dotnet publish /p:DebugType=None /p:DebugSymbols=false --no-self-contained --configuration Release -o publish -r linux-x64
