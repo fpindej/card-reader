@@ -9,8 +9,6 @@ internal class User : IEntityTypeConfiguration<Models.User>
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
     public ushort YearOfBirth { get; set; }
-
-    public string? RfidId { get; set; }
     
     public string? Notes { get; set; }
 
@@ -31,10 +29,6 @@ internal class User : IEntityTypeConfiguration<Models.User>
 
         builder.Property(b => b.YearOfBirth)
             .IsRequired();
-
-        builder.Property(b => b.RfidId)
-            .IsRequired(false)
-            .HasMaxLength(20);
 
         builder.Property(u => u.Notes)
             .IsRequired(false)

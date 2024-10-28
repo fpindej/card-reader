@@ -32,25 +32,6 @@ public class UserService : IUserService
         return await _userRepository.GetByIdAsync(id);
     }
 
-    public async Task<User?> GetByRfidId(string id)
-    {
-        _logger.LogInformation("Checking if user has RFID assigned...");
-
-        var user = await _userRepository.GetByRfidIdAsync(id);
-        
-        if (user is null)
-            _logger.LogInformation("No user assigned to this RFID key");
-
-        return user;
-    }
-
-    public async Task<List<User>> GetValidUsersAsync()
-    {
-        _logger.LogInformation("Getting all valid users...");
-
-        return await _userRepository.GetValidUsersAsync();
-    }
-
     public async Task<IEnumerable<User>> GetAllAsync(int pageNumber, int pageSize)
     {
         _logger.LogInformation("Getting all users...");

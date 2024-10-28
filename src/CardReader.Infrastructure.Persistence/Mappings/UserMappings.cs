@@ -10,7 +10,6 @@ internal static class UserMapping
         FirstName = userModel.FirstName,
         LastName = userModel.LastName,
         YearOfBirth = userModel.YearOfBirth,
-        RfidId = userModel.RfidId,
         Notes = userModel.Notes
     };
 
@@ -19,7 +18,6 @@ internal static class UserMapping
         FirstName = user.FirstName,
         LastName = user.LastName,
         YearOfBirth = user.YearOfBirth,
-        RfidId = user.RfidId,
         Notes = user.Notes
     };
 }

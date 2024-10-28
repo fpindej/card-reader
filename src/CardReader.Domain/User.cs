@@ -12,8 +12,6 @@ public class User
 
     public required ushort YearOfBirth { get; set; }
     
-    public string? RfidId { get; set; }
-    
     [MaxLength(200)]
     public string? Notes { get; set; }
 }
