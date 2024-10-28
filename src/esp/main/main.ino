@@ -1,5 +1,5 @@
 #include "WiFiManager.h"
-#include "UserStore.h"
+#include "CardHandler.h"
 #include "RFIDHandler.h"
 
 void setup() 
@@ -7,11 +7,11 @@ void setup()
     Serial.begin(9600);
     WiFiManager::connect();
     RFIDHandler::init();
-    UserStore::fetchUsersFromServer();
+    CardHandler::fetchCardsFromServer();
 }
 
 void loop() 
 {
-    UserStore::updateValidUsers();
+    CardHandler::updateActiveCards();
     RFIDHandler::checkCard();
 }

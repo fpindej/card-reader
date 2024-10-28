@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include <MFRC522.h>
 #include "RFIDHandler.h"
-#include "UserStore.h"
+#include "CardHandler.h"
 
 // Pin Definitions
 #define SS_PIN 5
@@ -21,11 +21,10 @@ void RFIDHandler::checkCard()
     if (!rfid.PICC_IsNewCardPresent()) return;  // Check for a new card
     if (!rfid.PICC_ReadCardSerial()) return;   // Read card serial
 
-    UserStore::fetchUsersFromServer();
+    CardHandler::fetchCardsFromServer();
     String rfidId = constructRfidId();
 
-    // Check if the user is valid
-    if (UserStore::isUserValid(rfidId)) 
+    if (CardHandler::isCardActive(rfidId)) 
     {
         Serial.println("Access granted for: " + rfidId);
         // Add code to grant access
