@@ -23,7 +23,7 @@ internal class UserRepository : IUserRepository
         var userModel = user.ToCreateModel();
 
         _ = await _context.Users.AddAsync(userModel);
-        var entriesCount = await _context.SaveChangesAsync();
+        _ = await _context.SaveChangesAsync();
         _logger.LogInformation("Created new user with ID: {userId}", userModel.Id);
         
         return userModel.ToDomain();

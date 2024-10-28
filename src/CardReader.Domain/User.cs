@@ -1,4 +1,6 @@
-﻿namespace CardReader.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CardReader.Domain;
 
 public class User
 {
@@ -11,4 +13,7 @@ public class User
     public required ushort YearOfBirth { get; set; }
     
     public string? RfidId { get; set; }
+    
+    [MaxLength(200)]
+    public string? Notes { get; set; }
 }

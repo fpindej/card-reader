@@ -11,6 +11,8 @@ internal class User : IEntityTypeConfiguration<Models.User>
     public ushort YearOfBirth { get; set; }
 
     public string? RfidId { get; set; }
+    
+    public string? Notes { get; set; }
 
     public void Configure(EntityTypeBuilder<User> builder)
     {
@@ -33,5 +35,9 @@ internal class User : IEntityTypeConfiguration<Models.User>
         builder.Property(b => b.RfidId)
             .IsRequired(false)
             .HasMaxLength(20);
+
+        builder.Property(u => u.Notes)
+            .IsRequired(false)
+            .HasMaxLength(200);
     }
 }
