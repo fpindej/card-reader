@@ -36,22 +36,10 @@ internal class UserRepository : IUserRepository
         return userModel?.ToDomain();
     }
 
-    public async Task<User?> GetByRfidIdAsync(string id)
-    {
-        var userModel = await _context.Users.FirstOrDefaultAsync(x => x.RfidId == id);
-
-        return userModel?.ToDomain();
-    }
-
-    public async Task<List<User>> GetValidUsersAsync()
-    {
-        var users = await _context.Users.Where(x => !string.IsNullOrWhiteSpace(x.RfidId)).Select(x => x.ToDomain()).ToListAsync();
-        return users;
-    }
-
     public async Task<IEnumerable<User>> GetAllAsync(int pageNumber, int pageSize)
     {
         var usersModel = await _context.Users
+            .OrderBy(u => u.Id)
             .Paginate(pageNumber, pageSize)
             .ToListAsync();
 
