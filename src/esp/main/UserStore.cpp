@@ -9,7 +9,7 @@
 String validUsers[MAX_USERS];         // Array to store valid users
 int userCount = 0;                    // Current number of valid users
 
-const char* UserStore::endpointGetValidUsers = "https://gym.pindej.cz/api/Rfid/validUsers";
+const char* UserStore::endpointGetValidUsers = "https://gym.pindej.cz/api/rfidcard/getallactive";
 
 void UserStore::updateValidUsers() 
 {
