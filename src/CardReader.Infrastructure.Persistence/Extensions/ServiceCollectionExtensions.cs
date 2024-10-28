@@ -17,6 +17,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRfidCardRepository, RfidCardRepository>();
 
         return services;
     }

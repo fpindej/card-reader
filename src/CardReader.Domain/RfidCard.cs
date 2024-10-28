@@ -8,4 +8,6 @@ public class RfidCard
     public string Id { get; set; } = null!;
     
     public bool IsActive { get; set; }
+    
+    public int UserId { get; set; }
 }

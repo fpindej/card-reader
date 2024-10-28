@@ -1,55 +1,81 @@
 ﻿using CardReader.Application;
+using CardReader.WebApi.Dtos;
+using CardReader.WebApi.Mappings;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CardReader.WebApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
-public class RfidController : ControllerBase
+[Route("api/rfidcard")]
+public class RfidCardController : ControllerBase
 {
-    private readonly ILogger<RfidController> _logger;
+    private readonly IRfidCardService _rfidCardService;
 
-    public RfidController(ILogger<RfidController> logger, IUserService userService)
+    public RfidCardController(IRfidCardService rfidCardService)
     {
-        _logger = logger;
+        _rfidCardService = rfidCardService;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] RfidRequest? request)
+    [Route("create")]
+    public async Task<ActionResult<CreateRfidCardResponse>> Create([FromBody] CreateRfidCardRequest createRfidCardRequest)
     {
-        // if (request is null)
-        // {
-        //     _logger.LogWarning("Received empty RFID request");
-        //     return BadRequest();
-        // }
-        //
-        // if (string.IsNullOrWhiteSpace(request.NuidHex))
-        // {
-        //     _logger.LogWarning("Received empty NUID");
-        //     return BadRequest();
-        // }
-        //
-        // var user = await _userService.GetByRfidId(request.NuidHex);
-        //
-        // if (user is null)
-        // {
-        //     return BadRequest("RFID has no valid user assigned.");
-        // }
-        //
-        // _logger.LogInformation("Received RFID request: {NuidHex}", request.NuidHex);
-        //
-        // return Ok($"User: {user.FirstName} {user.LastName}\nACCESS APPROVED");
-        
-        await Task.CompletedTask;
-        return BadRequest("Not implemented yet");
+        var rfidCard = createRfidCardRequest.ToDomain();
+
+        var newRfidCard = await _rfidCardService.CreateAsync(rfidCard);
+
+        return CreatedAtAction(nameof(GetById), new { id = newRfidCard.Id }, newRfidCard.ToResponse());
     }
-    
-    [HttpGet("validUsers")]
-    public async Task<IActionResult> GetValidRfidCards()
+
+    [HttpGet]
+    [Route("get/{id}")]
+    public async Task<ActionResult<RfidCardResponse>> GetById(string id)
     {
-        await Task.CompletedTask;
-        return BadRequest("Not implemented yet");
+        var rfidCard = await _rfidCardService.GetByIdAsync(id);
+        if (rfidCard == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(rfidCard.ToResponse());
+    }
+
+    [HttpGet]
+    [Route("getallactive")]
+    public async Task<ActionResult<IEnumerable<string>>> GetAllActive()
+    {
+        var activeCards = await _rfidCardService.GetAllActiveAsync();
+        var activeCardIds = activeCards.Select(card => card.Id);
+        
+        return Ok(activeCardIds);
+    }
+
+    [HttpPost]
+    [Route("activate/{id}")]
+    public async Task<ActionResult> Activate(string id)
+    {
+        await _rfidCardService.ActivateAsync(id);
+        return NoContent();
+    }
+
+    [HttpPost]
+    [Route("deactivate/{id}")]
+    public async Task<ActionResult> Deactivate(string id)
+    {
+        await _rfidCardService.DeactivateAsync(id);
+        return NoContent();
+    }
+
+    [HttpDelete]
+    [Route("delete/{id}")]
+    public async Task<ActionResult> Delete(string id)
+    {
+        var result = await _rfidCardService.DeleteAsync(id);
+        if (!result)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
     }
 }
-
-public record RfidRequest(string? NuidHex);

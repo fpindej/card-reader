@@ -14,7 +14,7 @@ internal static class UserMapping
         RfidCard = userModel.RfidCard?.ToDomain()
     };
 
-    public static Models.User ToCreateModel(this User user) => new()
+    public static Models.User ToModel(this User user) => new()
     {
         FirstName = user.FirstName,
         LastName = user.LastName,

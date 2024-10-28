@@ -20,7 +20,7 @@ internal class UserRepository : IUserRepository
 
     public async Task<User> CreateAsync(User user)
     {
-        var userModel = user.ToCreateModel();
+        var userModel = user.ToModel();
 
         _ = await _context.Users.AddAsync(userModel);
         _ = await _context.SaveChangesAsync();
