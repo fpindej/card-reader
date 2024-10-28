@@ -7,7 +7,6 @@ internal static class UserMappings
 {
     public static User ToDomain(this CreateUserRequest request) => new()
     {
-        Id = Guid.NewGuid(),
         FirstName = request.FirstName,
         LastName = request.LastName,
         YearOfBirth = request.YearOfBirth

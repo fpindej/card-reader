@@ -23,14 +23,14 @@ public class UserController : ControllerBase
     {
         var user = createUserRequest.ToDomain();
 
-        await _userService.CreateAsync(user);
+        var newUser = await _userService.CreateAsync(user);
 
-        return CreatedAtAction(nameof(GetById), new { id = user.Id }, user.ToResponse());
+        return CreatedAtAction(nameof(GetById), new { id = newUser.Id }, newUser.ToResponse());
     }
 
     [HttpGet]
-    [Route("get/{id:guid}")]
-    public async Task<ActionResult> GetById([FromRoute] Guid id)
+    [Route("get/{id:int}")]
+    public async Task<ActionResult> GetById([FromRoute] int id)
     {
         var user = await _userService.GetByIdAsync(id);
         
@@ -64,8 +64,8 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("delete/{id:guid}")]
-    public async Task<ActionResult> Delete([FromRoute] Guid id)
+    [Route("delete/{id:int}")]
+    public async Task<ActionResult> Delete([FromRoute] int id)
     {
         var deleted = await _userService.DeleteByIdAsync(id);
         if (!deleted)

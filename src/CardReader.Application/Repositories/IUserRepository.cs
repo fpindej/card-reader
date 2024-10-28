@@ -4,9 +4,11 @@ namespace CardReader.Application.Repositories;
 
 public interface IUserRepository
 {
-    Task CreateAsync(User user);
-    Task<User?> GetByIdAsync(Guid id);
+    Task<User> CreateAsync(User user);
+    Task<User?> GetByIdAsync(int id);
+    Task<User?> GetByRfidIdAsync(string id);
+    Task<List<User>> GetValidUsersAsync();
     Task<IEnumerable<User>> GetAllAsync(int pageNumber, int pageSize);
     Task<bool> UpdateAsync(User user);
-    Task<bool> DeleteAsync(Guid id);
+    Task<bool> DeleteAsync(int id);
 }

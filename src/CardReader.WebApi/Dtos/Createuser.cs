@@ -2,4 +2,4 @@
 
 public record CreateUserRequest(string FirstName, string LastName, ushort YearOfBirth);
 
-public record CreateUserResponse(Guid Id, string FirstName, string LastName, ushort YearOfBirth);
+public record CreateUserResponse(int Id, string FirstName, string LastName, ushort YearOfBirth);

@@ -2,11 +2,13 @@
 
 public class User
 {
-    public required Guid Id { get; init; }
+    public int Id { get; set; }
 
     public required string FirstName { get; set; }
 
     public required string LastName { get; set; }
 
     public required ushort YearOfBirth { get; set; }
+    
+    public string? RfidId { get; set; }
 }

@@ -9,14 +9,15 @@ internal static class UserMapping
         Id = userModel.Id,
         FirstName = userModel.FirstName,
         LastName = userModel.LastName,
-        YearOfBirth = userModel.YearOfBirth
+        YearOfBirth = userModel.YearOfBirth,
+        RfidId = userModel.RfidId
     };
 
-    public static Models.User ToModel(this User user) => new()
+    public static Models.User ToCreateModel(this User user) => new()
     {
-        Id = user.Id,
         FirstName = user.FirstName,
         LastName = user.LastName,
-        YearOfBirth = user.YearOfBirth
+        YearOfBirth = user.YearOfBirth,
+        RfidId = user.RfidId
     };
 }

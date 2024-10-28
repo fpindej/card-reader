@@ -18,20 +18,35 @@ internal class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task CreateAsync(User user)
+    public async Task<User> CreateAsync(User user)
     {
-        var userModel = user.ToModel();
+        var userModel = user.ToCreateModel();
 
         _ = await _context.Users.AddAsync(userModel);
         var entriesCount = await _context.SaveChangesAsync();
-        _logger.LogInformation("Saved entries count: {entriesCount}", entriesCount.ToString());
+        _logger.LogInformation("Created new user with ID: {userId}", userModel.Id);
+        
+        return userModel.ToDomain();
     }
 
-    public async Task<User?> GetByIdAsync(Guid id)
+    public async Task<User?> GetByIdAsync(int id)
     {
         var userModel = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
         
         return userModel?.ToDomain();
+    }
+
+    public async Task<User?> GetByRfidIdAsync(string id)
+    {
+        var userModel = await _context.Users.FirstOrDefaultAsync(x => x.RfidId == id);
+
+        return userModel?.ToDomain();
+    }
+
+    public async Task<List<User>> GetValidUsersAsync()
+    {
+        var users = await _context.Users.Where(x => !string.IsNullOrWhiteSpace(x.RfidId)).Select(x => x.ToDomain()).ToListAsync();
+        return users;
     }
 
     public async Task<IEnumerable<User>> GetAllAsync(int pageNumber, int pageSize)
@@ -58,7 +73,7 @@ internal class UserRepository : IUserRepository
         return true;
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public async Task<bool> DeleteAsync(int id)
     {
         var userModel = await _context.Users.FindAsync(id);
 
