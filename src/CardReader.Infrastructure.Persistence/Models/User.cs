@@ -11,6 +11,8 @@ internal class User : IEntityTypeConfiguration<Models.User>
     public ushort YearOfBirth { get; set; }
     
     public string? Notes { get; set; }
+    
+    public virtual RfidCard? RfidCard { get; set; }
 
     public void Configure(EntityTypeBuilder<User> builder)
     {
@@ -33,5 +35,10 @@ internal class User : IEntityTypeConfiguration<Models.User>
         builder.Property(u => u.Notes)
             .IsRequired(false)
             .HasMaxLength(200);
+        
+        builder.HasOne(u => u.RfidCard)
+            .WithOne(rc => rc.User)
+            .HasForeignKey<RfidCard>(rc => rc.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

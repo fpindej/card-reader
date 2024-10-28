@@ -10,7 +10,8 @@ internal static class UserMapping
         FirstName = userModel.FirstName,
         LastName = userModel.LastName,
         YearOfBirth = userModel.YearOfBirth,
-        Notes = userModel.Notes
+        Notes = userModel.Notes,
+        RfidCard = userModel.RfidCard?.ToDomain()
     };
 
     public static Models.User ToCreateModel(this User user) => new()
@@ -18,6 +19,7 @@ internal static class UserMapping
         FirstName = user.FirstName,
         LastName = user.LastName,
         YearOfBirth = user.YearOfBirth,
-        Notes = user.Notes
+        Notes = user.Notes,
+        RfidCard = user.RfidCard?.ToModel()
     };
 }

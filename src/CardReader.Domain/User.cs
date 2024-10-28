@@ -14,4 +14,6 @@ public class User
     
     [MaxLength(200)]
     public string? Notes { get; set; }
+    
+    public RfidCard? RfidCard { get; set; }
 }

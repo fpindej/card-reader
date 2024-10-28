@@ -5,12 +5,13 @@ namespace CardReader.WebApi.Mappings;
 
 internal static class UserMappings
 {
-    public static User ToDomain(this CreateUserRequest request) => new()
+    public static User ToDomain(this CreateUserRequest request, RfidCard? card = null) => new()
     {
         FirstName = request.FirstName,
         LastName = request.LastName,
         YearOfBirth = request.YearOfBirth,
-        Notes = request.Notes
+        Notes = request.Notes,
+        RfidCard = card
     };
 
     public static CreateUserResponse ToResponse(this User user) 

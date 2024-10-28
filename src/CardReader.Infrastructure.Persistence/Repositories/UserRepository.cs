@@ -31,7 +31,9 @@ internal class UserRepository : IUserRepository
 
     public async Task<User?> GetByIdAsync(int id)
     {
-        var userModel = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+        var userModel = await _context.Users
+            .Include(u => u.RfidCard)
+            .FirstOrDefaultAsync(x => x.Id == id);
         
         return userModel?.ToDomain();
     }
@@ -39,6 +41,7 @@ internal class UserRepository : IUserRepository
     public async Task<IEnumerable<User>> GetAllAsync(int pageNumber, int pageSize)
     {
         var usersModel = await _context.Users
+            .Include(u => u.RfidCard)
             .OrderBy(u => u.Id)
             .Paginate(pageNumber, pageSize)
             .ToListAsync();
