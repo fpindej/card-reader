@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CardReader.Application;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CardReader.WebApi.Controllers;
 
@@ -7,10 +8,12 @@ namespace CardReader.WebApi.Controllers;
 public class RfidController : ControllerBase
 {
     private readonly ILogger<RfidController> _logger;
+    private readonly IUserService _userService;
 
-    public RfidController(ILogger<RfidController> logger)
+    public RfidController(ILogger<RfidController> logger, IUserService userService)
     {
         _logger = logger;
+        _userService = userService;
     }
 
     [HttpPost]
@@ -28,9 +31,23 @@ public class RfidController : ControllerBase
             return BadRequest();
         }
 
+        var user = await _userService.GetByRfidId(request.NuidHex);
+
+        if (user is null)
+        {
+            return BadRequest("RFID has no valid user assigned.");
+        }
+
         _logger.LogInformation("Received RFID request: {NuidHex}", request.NuidHex);
 
-        return Ok();
+        return Ok($"User: {user.FirstName} {user.LastName}\nACCESS APPROVED");
+    }
+    
+    [HttpGet("validUsers")]
+    public async Task<IActionResult> GetValidUsers()
+    {
+        var users = await _userService.GetValidUsersAsync();
+        return Ok(users.Select(u => u.RfidId));
     }
 }
 
