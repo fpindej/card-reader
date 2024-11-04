@@ -1,0 +1,36 @@
+services:
+  card-reader-api:
+    image: card-reader-api:<IMAGE_TAG>
+    container_name: card-reader-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "5002:5001"
+    restart: unless-stopped
+    networks:
+      - card-reader-backend
+    depends_on:
+      - card-reader-db
+
+  card-reader-db:
+    image: postgres:15-alpine
+    container_name: card-reader-db
+    environment:
+      - POSTGRES_DB=<DB_NAME>
+      - POSTGRES_USER=<DB_USER>
+      - POSTGRES_PASSWORD=<DB_PASSWORD>
+    volumes:
+      - card-reader_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - card-reader-backend
+
+networks:
+  card-reader-backend:
+    external: true
+
+volumes:
+  card-reader_db_data:
+    driver: local
