@@ -62,9 +62,6 @@ public class Startup
                 c.RoutePrefix = "redoc";
             });
             
-            Log.Debug("Applying migrations");
-            app.ApplyMigrations();
-            
             if (env.IsDevelopment())
             {
                 Log.Debug("Setting UseDeveloperExceptionPage");
