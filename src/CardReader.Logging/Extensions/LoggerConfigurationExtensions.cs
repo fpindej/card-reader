@@ -40,7 +40,7 @@ public static class LoggerConfigurationExtensions
     {
         return loggerConfiguration
             .MinimumLevel.Warning()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
             .WriteTo.Async(a => a.Console(theme: AnsiConsoleTheme.Code,
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message:lj}{NewLine}{Exception:j}"))
