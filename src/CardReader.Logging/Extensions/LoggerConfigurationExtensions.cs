@@ -1,49 +1,46 @@
+using System.ComponentModel;
+using Microsoft.Extensions.Configuration;
 using Serilog;
-using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 
 namespace CardReader.Logging.Extensions;
 
 public static class LoggerConfigurationExtensions
 {
-    public static void SetupLogger(string? environmentName)
-    {
-        var baseConfiguration = new LoggerConfiguration()
-            .ConfigureBaseLogging(environmentName);
+    private const string OutputTemplate =
+        "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception:j}";
 
-        Log.Logger = baseConfiguration.CreateLogger();
-    }
-
-    private static LoggerConfiguration ConfigureBaseLogging(this LoggerConfiguration loggerConfiguration,
-        string? environmentName)
+    [Description(
+        "Configures a minimal logging setup for early startup events before the full configuration from appsettings.json is available.")]
+    public static ILogger ConfigureMinimalLogging(string environmentName)
     {
-        return environmentName switch
+        var loggerConfiguration = new LoggerConfiguration();
+
+        switch (environmentName)
         {
-            "Development" => loggerConfiguration.ConfigureDevelopmentLogging(),
-            "Production" => loggerConfiguration.ConfigureProductionLogging(),
-            _ => loggerConfiguration.ConfigureProductionLogging()
-        };
+            case Environments.Development:
+                loggerConfiguration.MinimumLevel.Debug();
+                break;
+            case Environments.Production:
+                loggerConfiguration.MinimumLevel.Information();
+                break;
+
+            default:
+                loggerConfiguration.MinimumLevel.Information();
+                break;
+        }
+
+        loggerConfiguration.WriteTo.Console(theme: AnsiConsoleTheme.Code,
+            outputTemplate: OutputTemplate);
+
+        return loggerConfiguration.CreateBootstrapLogger();
     }
 
-    private static LoggerConfiguration ConfigureDevelopmentLogging(this LoggerConfiguration loggerConfiguration)
+    public static void SetupLogger(IConfiguration configuration, LoggerConfiguration loggerConfiguration)
     {
-        return loggerConfiguration
-            .MinimumLevel.Debug()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+        loggerConfiguration
+            .ReadFrom.Configuration(configuration)
             .WriteTo.Async(a => a.Console(theme: AnsiConsoleTheme.Code,
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message:lj}{NewLine}{Exception:j}"))
-            .Enrich.FromLogContext();
-    }
-
-    private static LoggerConfiguration ConfigureProductionLogging(this LoggerConfiguration loggerConfiguration)
-    {
-        return loggerConfiguration
-            .MinimumLevel.Warning()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
-            .WriteTo.Async(a => a.Console(theme: AnsiConsoleTheme.Code,
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message:lj}{NewLine}{Exception:j}"))
-            .Enrich.FromLogContext();
+                outputTemplate: OutputTemplate));
     }
 }

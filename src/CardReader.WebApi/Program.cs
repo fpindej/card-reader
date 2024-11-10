@@ -1,5 +1,4 @@
 using Serilog;
-using LoggerConfigurationExtensions = CardReader.Logging.Extensions.LoggerConfigurationExtensions;
 
 namespace CardReader.WebApi;
 
@@ -9,15 +8,24 @@ public static class Program
     {
         const string appName = "CardReader";
         var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        LoggerConfigurationExtensions.SetupLogger(environmentName);
+
+        Log.Logger = Logging.Extensions.LoggerConfigurationExtensions.ConfigureMinimalLogging(environmentName);
 
         try
         {
             Log.Information("Starting web host {AppName}", appName);
-            await CreateHostBuilder().Build().RunAsync();
+            var hostBuilder = CreateHostBuilder();
+
+            hostBuilder.UseSerilog((context, _, loggerConfiguration) =>
+            {
+                Logging.Extensions.LoggerConfigurationExtensions.SetupLogger(context.Configuration, loggerConfiguration);
+            }, preserveStaticLogger: true);
+
+            var host = hostBuilder.Build();
+            await host.RunAsync();
+
             Log.Information("Ending web host {AppName}", appName);
             return 0;
-            
         }
         catch (Exception e) when (e is not HostAbortedException)
         {
@@ -38,6 +46,7 @@ public static class Program
             .ConfigureAppConfiguration((context, config) =>
             {
                 var env = context.HostingEnvironment;
+
                 config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
             })
