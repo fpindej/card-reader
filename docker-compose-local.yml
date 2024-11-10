@@ -1,0 +1,38 @@
+services:
+  card-reader-api:
+    build:
+      context: ./src/CardReader.WebApi
+      dockerfile: Dockerfile
+    container_name: card-reader-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development # change this if you want to test different env
+    ports:
+      - "5002:8080"
+    restart: unless-stopped
+    networks:
+      - card-reader-backend
+    depends_on:
+      - card-reader-db
+
+  card-reader-db:
+    image: postgres:15-alpine
+    container_name: card-reader-db
+    environment:
+      - POSTGRES_DB=card-reader
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=pwd
+    volumes:
+      - card-reader_db_data:/var/lib/postgresql/data
+    ports:
+      - "5556:5432"   # Use localhost:5556 to connect from data sources
+    restart: unless-stopped
+    networks:
+      - card-reader-backend
+
+networks:
+  card-reader-backend:
+    driver: bridge
+
+volumes:
+  card-reader_db_data:
+    driver: local

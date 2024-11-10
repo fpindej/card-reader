@@ -7,7 +7,7 @@ public static class Program
     public static async Task<int> Main()
     {
         const string appName = "CardReader";
-        var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Environments.Production;
 
         Log.Logger = Logging.Extensions.LoggerConfigurationExtensions.ConfigureMinimalLogging(environmentName);
 

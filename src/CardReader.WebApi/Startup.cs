@@ -66,6 +66,9 @@ public class Startup
             {
                 Log.Debug("Setting UseDeveloperExceptionPage");
                 app.UseDeveloperExceptionPage();
+                
+                Log.Debug("Apply migrations to local database");
+                app.ApplyMigrations();
             }
 
             Log.Debug("Setting cors => allow *");
