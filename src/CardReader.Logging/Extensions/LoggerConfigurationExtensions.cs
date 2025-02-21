@@ -7,11 +7,9 @@ namespace CardReader.Logging.Extensions;
 
 public static class LoggerConfigurationExtensions
 {
-    private const string OutputTemplate =
-        "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception:j}";
+    private const string OutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception:j}";
 
-    [Description(
-        "Configures a minimal logging setup for early startup events before the full configuration from appsettings.json is available.")]
+    [Description("Configures a minimal logging setup for early startup events before the full configuration from appsettings.json is available.")]
     public static ILogger ConfigureMinimalLogging(string environmentName)
     {
         var loggerConfiguration = new LoggerConfiguration();
@@ -30,8 +28,7 @@ public static class LoggerConfigurationExtensions
                 break;
         }
 
-        loggerConfiguration.WriteTo.Console(theme: AnsiConsoleTheme.Code,
-            outputTemplate: OutputTemplate);
+        loggerConfiguration.WriteTo.Console(theme: AnsiConsoleTheme.Code, outputTemplate: OutputTemplate);
 
         return loggerConfiguration.CreateBootstrapLogger();
     }
@@ -40,7 +37,6 @@ public static class LoggerConfigurationExtensions
     {
         loggerConfiguration
             .ReadFrom.Configuration(configuration)
-            .WriteTo.Async(a => a.Console(theme: AnsiConsoleTheme.Code,
-                outputTemplate: OutputTemplate));
+            .WriteTo.Async(a => a.Console(theme: AnsiConsoleTheme.Code, outputTemplate: OutputTemplate));
     }
 }
