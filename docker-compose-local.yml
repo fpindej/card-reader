@@ -1,8 +1,8 @@
 services:
   card-reader-api:
     build:
-      context: ./src/CardReader.WebApi
-      dockerfile: Dockerfile
+      context: ./src
+      dockerfile: CardReader.WebApi/Dockerfile
     container_name: card-reader-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development # change this if you want to test different env
