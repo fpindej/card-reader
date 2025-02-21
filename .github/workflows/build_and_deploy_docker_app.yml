@@ -36,7 +36,7 @@ jobs:
           sed -i 's|<DB_PASSWORD>|'"${{ secrets.DB_PASSWORD }}"'|g' docker-compose.yml
 
       - name: Upload Docker Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docker-files
           path: |
@@ -49,7 +49,7 @@ jobs:
 
     steps:
       - name: Download Docker Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: docker-files
           path: ./
