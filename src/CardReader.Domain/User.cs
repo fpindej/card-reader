@@ -1,19 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace CardReader.Domain;
+﻿namespace CardReader.Domain;
 
 public class User
 {
     public int Id { get; set; }
 
-    public required string FirstName { get; set; }
+    public string FirstName { get; set; } = null!;
 
-    public required string LastName { get; set; }
+    public string LastName { get; set; } = null!;
 
-    public required ushort YearOfBirth { get; set; }
-    
-    [MaxLength(200)]
-    public string? Notes { get; set; }
-    
-    public RfidCard? RfidCard { get; set; }
+    public string Email { get; set; } = null!;
+
+    public DateTime YearOfBirth { get; set; }
+
+    public virtual ICollection<Membership> Memberships { get; set; } = new List<Membership>();
 }
