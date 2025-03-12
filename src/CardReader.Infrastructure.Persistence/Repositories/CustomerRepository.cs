@@ -39,4 +39,33 @@ internal class CustomerRepository : ICustomerRepository
             .Paginate(pageNumber, pageSize)
             .ToListAsync();
     }
+    
+    public async Task<bool> UpdateAsync(Customer customer)
+    {
+        var customerinDb = await _context.Customers
+            .AsTracking()
+            .FirstOrDefaultAsync(x => x.Id == customer.Id);
+
+        if (customerinDb is null)
+        {
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(customer.FirstName))
+        {
+            customerinDb.FirstName = customer.FirstName;
+        }
+        
+        if (!string.IsNullOrWhiteSpace(customer.LastName))
+        {
+            customerinDb.LastName = customer.LastName;
+        }
+        
+        if (!string.IsNullOrWhiteSpace(customer.Email))
+        {
+            customerinDb.Email = customer.Email;
+        }
+
+        return true;
+    }
 }

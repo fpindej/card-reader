@@ -31,7 +31,7 @@ public class CustomerController : ControllerBase
     
     [HttpGet]
     [Route("get/{id:int}")]
-    public async Task<ActionResult<CustomerResponse>> GetCustomerById(int id)
+    public async Task<ActionResult<CustomerGetResponse>> GetCustomerById(int id)
     {
         var customer = await _customerService.GetByIdAsync(id);
     
@@ -40,14 +40,27 @@ public class CustomerController : ControllerBase
             return NotFound(new { message = "Customer not found." });
         }
 
-        return Ok(new CustomerResponse(customer.Id, customer.FirstName, customer.LastName, customer.Email));
+        return Ok(new CustomerGetResponse(customer.Id, customer.FirstName, customer.LastName, customer.Email));
     }
 
     [HttpGet]
     [Route("getall")]
-    public async Task<ActionResult<IEnumerable<CustomerResponse>>> GetAllCustomers([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    public async Task<ActionResult<IEnumerable<CustomerGetResponse>>> GetAllCustomers([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         var customers = await _customerService.GetAllAsync(pageNumber, pageSize);
-        return Ok(customers.Select(c => new CustomerResponse(c.Id, c.FirstName, c.LastName, c.Email)));
+        return Ok(customers.Select(c => new CustomerGetResponse(c.Id, c.FirstName, c.LastName, c.Email)));
+    }
+    
+    [HttpPut]
+    [Route("update")]
+    public async Task<ActionResult> Update([FromBody] CustomerUpdateRequest request)
+    {
+        var isUpdated = await _customerService.UpdateAsync(request.Id, request.FirstName, request.LastName, request.Email);
+
+        if (!isUpdated)
+            return BadRequest("Customer could not be updated.");
+
+        return NoContent();
     }
 }
+
