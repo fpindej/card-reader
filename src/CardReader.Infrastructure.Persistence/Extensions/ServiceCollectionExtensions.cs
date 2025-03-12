@@ -1,4 +1,6 @@
 ﻿using CardReader.Application;
+using CardReader.Application.Repositories;
+using CardReader.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +18,7 @@ public static class ServiceCollectionExtensions
         });
         
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }
