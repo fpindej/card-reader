@@ -17,7 +17,7 @@ public class CustomerController : ControllerBase
 
     [HttpPost]
     [Route("create")]
-    public async Task<ActionResult<int>> CreateCustomer([FromBody] CreateCustomerRequest request)
+    public async Task<ActionResult<int>> CreateCustomer([FromBody] CustomerCreateRequest request)
     {
         var userId = await _customerService.CreateUserAsync(request.FirstName, request.LastName, request.Email);
 
@@ -53,7 +53,7 @@ public class CustomerController : ControllerBase
     
     [HttpPut]
     [Route("update")]
-    public async Task<ActionResult> Update([FromBody] CustomerUpdateRequest request)
+    public async Task<ActionResult> UpdateCustomer([FromBody] CustomerUpdateRequest request)
     {
         var isUpdated = await _customerService.UpdateAsync(request.Id, request.FirstName, request.LastName, request.Email);
 
@@ -65,7 +65,7 @@ public class CustomerController : ControllerBase
     
     [HttpDelete]
     [Route("delete/{id:int}")]
-    public async Task<ActionResult> Delete([FromRoute] int id)
+    public async Task<ActionResult> DeleteCustomer([FromRoute] int id)
     {
         var deleted = await _customerService.DeleteByIdAsync(id);
         if (!deleted)
