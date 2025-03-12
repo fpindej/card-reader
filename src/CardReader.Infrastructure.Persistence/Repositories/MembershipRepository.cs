@@ -66,4 +66,18 @@ internal class MembershipRepository : IMembershipRepository
         existingMembership.ExpiresAt = membership.ExpiresAt;
         return true;
     }
+    
+    public async Task<bool> RevokeAsync(int membershipId)
+    {
+        var membership = await _context.Memberships
+            .FirstOrDefaultAsync(m => m.Id == membershipId);
+
+        if (membership is null)
+        {
+            return false;
+        }
+
+        membership.ExpiresAt = DateTime.UtcNow;
+        return true;
+    }
 }

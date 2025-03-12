@@ -96,4 +96,34 @@ internal class MembershipService : IMembershipService
             return false;
         }
     }
+    
+    public async Task<bool> RevokeMembershipAsync(int customerId)
+    {
+        try
+        {
+            await _uow.BeginTransactionAsync();
+
+            var membership = await _membershipRepository.GetLatestMembershipAsync(customerId);
+            if (membership is null || !membership.IsActive)
+            {
+                await _uow.RollbackTransactionAsync();
+                return false;
+            }
+
+            var revoked = await _membershipRepository.RevokeAsync(membership.Id);
+            if (!revoked)
+            {
+                await _uow.RollbackTransactionAsync();
+                return false;
+            }
+
+            await _uow.CommitTransactionAsync();
+            return true;
+        }
+        catch
+        {
+            await _uow.RollbackTransactionAsync();
+            return false;
+        }
+    }
 }

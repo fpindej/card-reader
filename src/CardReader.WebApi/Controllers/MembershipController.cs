@@ -61,4 +61,18 @@ public class MembershipController : ControllerBase
 
         return Ok("Membership extended successfully.");
     }
+    
+    [HttpPost]
+    [Route("revoke")]
+    public async Task<IActionResult> RevokeMembership([FromBody] MembershipRevokeRequest request)
+    {
+        var revoked = await _membershipService.RevokeMembershipAsync(request.CustomerId);
+
+        if (!revoked)
+        {
+            return BadRequest(new { message = "Could not revoke membership." });
+        }
+
+        return Ok("Membership revoked successfully.");
+    }
 }
