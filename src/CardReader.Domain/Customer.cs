@@ -1,6 +1,6 @@
 ﻿namespace CardReader.Domain;
 
-public class User
+public class Customer
 {
     public int Id { get; set; }
 

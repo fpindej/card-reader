@@ -5,7 +5,7 @@ namespace CardReader.Infrastructure.Persistence;
 
 internal class GymDoorDbContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<User> Users { get; init; }
+    public DbSet<Customer> Customers { get; init; }
 
     public DbSet<AccessCard> AccessCards { get; init; }
 
@@ -16,7 +16,7 @@ internal class GymDoorDbContext(DbContextOptions options) : DbContext(options)
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(GymDoorDbContext).Assembly);
 
-        modelBuilder.Entity<User>(builder =>
+        modelBuilder.Entity<Customer>(builder =>
         {
             builder.HasKey(b => b.Id);
 
@@ -60,9 +60,9 @@ internal class GymDoorDbContext(DbContextOptions options) : DbContext(options)
             builder.Property(m => m.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            builder.HasOne(m => m.User)
+            builder.HasOne(m => m.Customer)
                 .WithMany(u => u.Memberships)
-                .HasForeignKey(m => m.UserId)
+                .HasForeignKey(m => m.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(m => m.AccessCard)

@@ -5,20 +5,20 @@ using CardReader.Domain;
 
 namespace CardReader.Infrastructure.Services;
 
-internal class UserService : IUserService
+internal class CustomerService : ICustomerService
 {
-    private readonly IUserRepository _userRepository;
+    private readonly ICustomerRepository _customerRepository;
     private readonly IUnitOfWork _uow;
 
-    public UserService(IUserRepository userRepository, IUnitOfWork uow)
+    public CustomerService(ICustomerRepository customerRepository, IUnitOfWork uow)
     {
-        _userRepository = userRepository;
+        _customerRepository = customerRepository;
         _uow = uow;
     }
 
     public async Task<int?> CreateUserAsync(string firstName, string lastName, string email)
     {
-        var user = new User
+        var user = new Customer
         {
             FirstName = firstName,
             LastName = lastName,
@@ -29,7 +29,7 @@ internal class UserService : IUserService
 
         try
         {
-            var userId = await _userRepository.CreateUserAsync(user);
+            var userId = await _customerRepository.CreateCustomerAsync(user);
             await _uow.CommitTransactionAsync();
 
             return userId;

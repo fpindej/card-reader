@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CardReader.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(GymDoorDbContext))]
-    [Migration("20250312182149_InitialMigration")]
+    [Migration("20250312194655_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -35,8 +35,8 @@ namespace CardReader.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("CardNumber")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.HasKey("Id");
 
@@ -46,41 +46,7 @@ namespace CardReader.Infrastructure.Persistence.Migrations
                     b.ToTable("AccessCards");
                 });
 
-            modelBuilder.Entity("CardReader.Domain.Membership", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccessCardId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<DateTime?>("ExpiresAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccessCardId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Memberships");
-                });
-
-            modelBuilder.Entity("CardReader.Domain.User", b =>
+            modelBuilder.Entity("CardReader.Domain.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,7 +73,41 @@ namespace CardReader.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("CardReader.Domain.Membership", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccessCardId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccessCardId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Memberships");
                 });
 
             modelBuilder.Entity("CardReader.Domain.Membership", b =>
@@ -118,15 +118,15 @@ namespace CardReader.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("CardReader.Domain.User", "User")
+                    b.HasOne("CardReader.Domain.Customer", "Customer")
                         .WithMany("Memberships")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("AccessCard");
 
-                    b.Navigation("User");
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("CardReader.Domain.AccessCard", b =>
@@ -134,7 +134,7 @@ namespace CardReader.Infrastructure.Persistence.Migrations
                     b.Navigation("Memberships");
                 });
 
-            modelBuilder.Entity("CardReader.Domain.User", b =>
+            modelBuilder.Entity("CardReader.Domain.Customer", b =>
                 {
                     b.Navigation("Memberships");
                 });

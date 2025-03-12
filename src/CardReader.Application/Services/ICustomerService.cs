@@ -2,7 +2,7 @@
 
 namespace CardReader.Application.Services;
 
-public interface IUserService
+public interface ICustomerService
 {
     Task<int?> CreateUserAsync(string firstName, string lastName, string email);
 }

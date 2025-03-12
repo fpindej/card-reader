@@ -4,20 +4,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CardReader.Infrastructure.Persistence.Repositories;
 
-internal class UserRepository : IUserRepository
+internal class CustomerRepository : ICustomerRepository
 {
     private readonly GymDoorDbContext _context;
 
-    public UserRepository(GymDoorDbContext context)
+    public CustomerRepository(GymDoorDbContext context)
     {
         _context = context;
     }
 
-    public async Task<int?> CreateUserAsync(User user)
+    public async Task<int?> CreateCustomerAsync(Customer customer)
     {
         try
         {
-            var entry = await _context.Users.AddAsync(user);
+            var entry = await _context.Customers.AddAsync(customer);
             return entry.Entity.Id;
         }
         catch (DbUpdateException)
