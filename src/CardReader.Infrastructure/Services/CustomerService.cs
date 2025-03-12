@@ -81,4 +81,27 @@ internal class CustomerService : ICustomerService
             return false;
         }
     }
+
+    public async Task<bool> DeleteByIdAsync(int id)
+    {
+        try
+        {
+            await _uow.BeginTransactionAsync();
+
+            var deleted = await _customerRepository.DeleteAsync(id);
+            if (!deleted)
+            {
+                await _uow.RollbackTransactionAsync();
+                return false;
+            }
+
+            await _uow.CommitTransactionAsync();
+            return true;
+        }
+        catch
+        {
+            await _uow.RollbackTransactionAsync();
+            return false;
+        }
+    }
 }

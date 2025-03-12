@@ -8,4 +8,5 @@ public interface ICustomerService
     Task<Customer?> GetByIdAsync(int id);
     Task<List<Customer>> GetAllAsync(int pageNumber, int pageSize);
     Task<bool> UpdateAsync(int id, string? firstName, string? lastName, string? email);
+    Task<bool> DeleteByIdAsync(int id);
 }

@@ -62,5 +62,16 @@ public class CustomerController : ControllerBase
 
         return NoContent();
     }
+    
+    [HttpDelete]
+    [Route("delete/{id:int}")]
+    public async Task<ActionResult> Delete([FromRoute] int id)
+    {
+        var deleted = await _customerService.DeleteByIdAsync(id);
+        if (!deleted)
+            return NotFound("Customer not found.");
+
+        return Ok("Customer deleted.");
+    }
 }
 

@@ -68,4 +68,19 @@ internal class CustomerRepository : ICustomerRepository
 
         return true;
     }
+    
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var customer = await _context.Customers
+            .AsTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (customer is null)
+        {
+            return false;
+        }
+
+        _context.Customers.Remove(customer);
+        return true;
+    }
 }
