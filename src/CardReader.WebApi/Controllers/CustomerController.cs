@@ -42,4 +42,12 @@ public class CustomerController : ControllerBase
 
         return Ok(new CustomerResponse(customer.Id, customer.FirstName, customer.LastName, customer.Email));
     }
+
+    [HttpGet]
+    [Route("getall")]
+    public async Task<ActionResult<IEnumerable<CustomerResponse>>> GetAllCustomers([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    {
+        var customers = await _customerService.GetAllAsync(pageNumber, pageSize);
+        return Ok(customers.Select(c => new CustomerResponse(c.Id, c.FirstName, c.LastName, c.Email)));
+    }
 }

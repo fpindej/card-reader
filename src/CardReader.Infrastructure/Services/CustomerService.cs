@@ -45,4 +45,9 @@ internal class CustomerService : ICustomerService
     {
         return await _customerRepository.GetByIdAsync(id);
     }
+
+    public async Task<List<Customer>> GetAllAsync(int pageNumber, int pageSize)
+    {
+        return await _customerRepository.GetAllAsync(pageNumber, pageSize);
+    }
 }
