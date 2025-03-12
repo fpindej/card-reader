@@ -7,8 +7,6 @@ internal class GymDoorDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<Customer> Customers { get; init; }
 
-    public DbSet<AccessCard> AccessCards { get; init; }
-
     public DbSet<Membership> Memberships { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,21 +33,6 @@ internal class GymDoorDbContext(DbContextOptions options) : DbContext(options)
                 .IsRequired();
         });
 
-        modelBuilder.Entity<AccessCard>(builder =>
-        {
-            builder.HasKey(ac => ac.Id);
-
-            builder.Property(ac => ac.Id)
-                .UseIdentityColumn();
-
-            builder.Property(ac => ac.CardNumber)
-                .IsRequired()
-                .HasMaxLength(64);
-
-            builder.HasIndex(ac => ac.CardNumber)
-                .IsUnique();
-        });
-
         modelBuilder.Entity<Membership>(builder =>
         {
             builder.HasKey(m => m.Id);
@@ -57,17 +40,15 @@ internal class GymDoorDbContext(DbContextOptions options) : DbContext(options)
             builder.Property(m => m.Id)
                 .UseIdentityColumn();
 
+            builder.Property(m => m.CardNumber)
+                .HasMaxLength(64);
+
             builder.Property(m => m.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             builder.HasOne(m => m.Customer)
                 .WithMany(u => u.Memberships)
                 .HasForeignKey(m => m.CustomerId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(m => m.AccessCard)
-                .WithMany(r => r.Memberships)
-                .HasForeignKey(m => m.AccessCardId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
     }

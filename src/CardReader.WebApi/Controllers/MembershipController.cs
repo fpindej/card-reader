@@ -45,4 +45,20 @@ public class MembershipController : ControllerBase
         
         return Ok("Card is valid.");
     }
+    
+    [HttpPut]
+    [Route("extend")]
+    public async Task<IActionResult> ExtendMembership([FromBody] MembershipExtendRequest request)
+    {
+        var extended = await _membershipService.ExtendMembershipAsync(
+            request.CustomerId,
+            request.DaysToExtend);
+
+        if (!extended)
+        {
+            return BadRequest(new { message = "Could not extend membership." });
+        }
+
+        return Ok("Membership extended successfully.");
+    }
 }

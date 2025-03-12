@@ -15,17 +15,19 @@ internal class MembershipRepository : IMembershipRepository
 
     public async Task<bool> CreateAsync(Membership membership)
     {
-        var existingCard = await _context.AccessCards
-            .FirstOrDefaultAsync(c => c.CardNumber == membership.AccessCard.CardNumber);
-        
-        if (existingCard is not null)
+        var existingCard = await _context.Memberships
+            .AnyAsync(m => m.CardNumber == membership.CardNumber);
+
+        if (existingCard)
         {
             return false;
         }
 
         var existingMembership = await _context.Memberships
-            .FirstOrDefaultAsync(m => m.CustomerId == membership.CustomerId && m.IsActive);
-            
+            .Where(m => m.CustomerId == membership.CustomerId)
+            .Where(m => m.ExpiresAt > DateTime.UtcNow)
+            .FirstOrDefaultAsync();
+
         if (existingMembership != null)
         {
             return false;
@@ -35,11 +37,33 @@ internal class MembershipRepository : IMembershipRepository
         return true;
     }
 
-    public async Task<AccessCard?> GetCardByNumberAsync(string cardNumber)
+    public async Task<Membership?> GetLatestMembershipAsync(int customerId)
     {
-        return await _context.AccessCards
-            .AsNoTracking()
-            .Include(c => c.Memberships)
-            .FirstOrDefaultAsync(c => c.CardNumber == cardNumber);
+        return await _context.Memberships
+            .Include(m => m.Customer)
+            .Where(m => m.CustomerId == customerId)
+            .OrderByDescending(m => m.ExpiresAt ?? DateTime.MinValue)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<Membership?> GetCardByNumberAsync(string cardNumber)
+    {
+        return await _context.Memberships
+            .Include(m => m.Customer)
+            .FirstOrDefaultAsync(m => m.CardNumber == cardNumber);
+    }
+
+    public async Task<bool> UpdateAsync(Membership membership)
+    {
+        var existingMembership = await _context.Memberships
+            .FirstOrDefaultAsync(m => m.Id == membership.Id);
+
+        if (existingMembership is null)
+        {
+            return false;
+        }
+
+        existingMembership.ExpiresAt = membership.ExpiresAt;
+        return true;
     }
 }
