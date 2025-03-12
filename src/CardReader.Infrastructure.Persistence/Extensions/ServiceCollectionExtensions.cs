@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CardReader.Application;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,8 @@ public static class ServiceCollectionExtensions
             var connectionString = configuration.GetConnectionString("Database");
             opt.UseNpgsql(connectionString);
         });
+        
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
