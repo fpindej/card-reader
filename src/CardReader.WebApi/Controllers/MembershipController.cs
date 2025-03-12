@@ -34,13 +34,13 @@ public class MembershipController : ControllerBase
 
     [HttpPost]
     [Route("validate/{cardNumber}")]
-    public async Task<ActionResult<bool>> ValidateCard(string cardNumber)
+    public async Task<IActionResult> ValidateCard(string cardNumber)
     {
-        var isValid = await _membershipService.ValidateCardAccessAsync(cardNumber);
+        var result = await _membershipService.ValidateCardAccessAsync(cardNumber);
         
-        if (isValid is false)
+        if (!result.IsSuccess)
         {
-            return BadRequest(new { message = "Card is not valid." });
+            return BadRequest(result.Error);
         }
         
         return Ok("Card is valid.");

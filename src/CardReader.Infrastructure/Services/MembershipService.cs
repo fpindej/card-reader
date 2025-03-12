@@ -71,10 +71,19 @@ internal class MembershipService : IMembershipService
         }
     }
 
-    public async Task<bool> ValidateCardAccessAsync(string cardNumber)
+    public async Task<Result> ValidateCardAccessAsync(string cardNumber)
     {
-        var card = await _membershipRepository.GetActiveByCardNumber(cardNumber);
-        return card?.IsActive ?? false;
+        try
+        {
+            var card = await _membershipRepository.GetActiveByCardNumber(cardNumber);
+            return card?.IsActive is true
+                ? Result.Success()
+                : Result.Failure("Card is not valid.");
+        }
+        catch
+        {
+            return Result.Failure("Failed to validate card access.");
+        }
     }
 
     public async Task<bool> ExtendMembershipAsync(int customerId, int daysToExtend)
