@@ -8,6 +8,8 @@ internal class GymDoorDbContext(DbContextOptions options) : DbContext(options)
     
     public DbSet<Models.RfidCard> RfidCards { get; init; }
 
+    public DbSet<Models.Membership> Memberships { get; init; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
