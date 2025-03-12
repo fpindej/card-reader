@@ -40,4 +40,9 @@ internal class CustomerService : ICustomerService
             return null;
         }
     }
+
+    public async Task<Customer?> GetByIdAsync(int id)
+    {
+        return await _customerRepository.GetByIdAsync(id);
+    }
 }

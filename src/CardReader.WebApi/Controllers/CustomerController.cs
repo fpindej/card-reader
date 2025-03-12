@@ -16,6 +16,7 @@ public class CustomerController : ControllerBase
     }
 
     [HttpPost]
+    [Route("create")]
     public async Task<ActionResult<int>> CreateCustomer([FromBody] CreateCustomerRequest request)
     {
         var userId = await _customerService.CreateUserAsync(request.FirstName, request.LastName, request.Email);
@@ -26,5 +27,19 @@ public class CustomerController : ControllerBase
         }
 
         return Ok(userId);
+    }
+    
+    [HttpGet]
+    [Route("get/{id:int}")]
+    public async Task<ActionResult<CustomerResponse>> GetCustomerById(int id)
+    {
+        var customer = await _customerService.GetByIdAsync(id);
+    
+        if (customer is null)
+        {
+            return NotFound(new { message = "Customer not found." });
+        }
+
+        return Ok(new CustomerResponse(customer.Id, customer.FirstName, customer.LastName, customer.Email));
     }
 }
