@@ -20,17 +20,31 @@ internal class MembershipService : IMembershipService
         _uow = uow;
     }
 
-    public async Task<bool> CreateMembershipAsync(int customerId, string cardNumber, DateTime? expiresAt = null)
+    public async Task<Result<Membership>> CreateMembershipAsync(int customerId, string cardNumber, DateTime? expiresAt = null)
     {
         try
         {
             await _uow.BeginTransactionAsync();
 
-            var customer = await _customerRepository.GetByIdAsync(customerId);
-            if (customer is null)
+            var existingCustomer = await _customerRepository.GetByIdAsync(customerId);
+            if (existingCustomer is null)
             {
                 await _uow.RollbackTransactionAsync();
-                return false;
+                return Result<Membership>.Failure("Customer not found.");
+            }
+            
+            var existingMembership = await _membershipRepository.GetLatestMembershipAsync(customerId);
+            if (existingMembership?.IsActive is true)
+            {
+                await _uow.RollbackTransactionAsync();
+                return Result<Membership>.Failure("Customer already has an active membership.");
+            }
+            
+            var existingCard = await _membershipRepository.GetActiveByCardNumber(cardNumber);
+            if (existingCard?.IsActive is true)
+            {
+                await _uow.RollbackTransactionAsync();
+                return Result<Membership>.Failure("Card is already in use.");
             }
 
             var membership = new Membership
@@ -41,25 +55,25 @@ internal class MembershipService : IMembershipService
             };
 
             var created = await _membershipRepository.CreateAsync(membership);
-            if (!created)
+            if (!created.IsSuccess)
             {
                 await _uow.RollbackTransactionAsync();
-                return false;
+                return created;
             }
 
             await _uow.CommitTransactionAsync();
-            return true;
+            return created;
         }
         catch
         {
             await _uow.RollbackTransactionAsync();
-            return false;
+            return Result<Membership>.Failure("Could not complete membership creation.");
         }
     }
 
     public async Task<bool> ValidateCardAccessAsync(string cardNumber)
     {
-        var card = await _membershipRepository.GetCardByNumberAsync(cardNumber);
+        var card = await _membershipRepository.GetActiveByCardNumber(cardNumber);
         return card?.IsActive ?? false;
     }
 

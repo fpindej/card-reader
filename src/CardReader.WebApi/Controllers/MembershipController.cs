@@ -17,16 +17,16 @@ public class MembershipController : ControllerBase
 
     [HttpPost]
     [Route("create")]
-    public async Task<ActionResult<int>> CreateMembership([FromBody] MembershipCreateRequest request)
+    public async Task<IActionResult> CreateMembership([FromBody] MembershipCreateRequest request)
     {
-        var isCreated = await _membershipService.CreateMembershipAsync(
+        var result = await _membershipService.CreateMembershipAsync(
             request.CustomerId, 
             request.CardNumber, 
             request.ExpiresAt);
 
-        if (isCreated is false)
+        if (!result.IsSuccess)
         {
-            return BadRequest(new { message = "Membership could not be created." });
+            return BadRequest(result.Error);
         }
 
         return Ok("Membership created successfully.");

@@ -13,28 +13,17 @@ internal class MembershipRepository : IMembershipRepository
         _context = context;
     }
 
-    public async Task<bool> CreateAsync(Membership membership)
+    public async Task<Result<Membership>> CreateAsync(Membership membership)
     {
-        var existingCard = await _context.Memberships
-            .AnyAsync(m => m.CardNumber == membership.CardNumber);
-
-        if (existingCard)
+        try
         {
-            return false;
+            await _context.Memberships.AddAsync(membership);
+            return Result<Membership>.Success(membership);
         }
-
-        var existingMembership = await _context.Memberships
-            .Where(m => m.CustomerId == membership.CustomerId)
-            .Where(m => m.ExpiresAt > DateTime.UtcNow)
-            .FirstOrDefaultAsync();
-
-        if (existingMembership != null)
+        catch
         {
-            return false;
+            return Result<Membership>.Failure("Failed to create membership.");
         }
-
-        await _context.Memberships.AddAsync(membership);
-        return true;
     }
 
     public async Task<Membership?> GetLatestMembershipAsync(int customerId)
@@ -46,11 +35,13 @@ internal class MembershipRepository : IMembershipRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<Membership?> GetCardByNumberAsync(string cardNumber)
+    public async Task<Membership?> GetActiveByCardNumber(string cardNumber)
     {
-        return await _context.Memberships
-            .Include(m => m.Customer)
-            .FirstOrDefaultAsync(m => m.CardNumber == cardNumber);
+        var memberships = await _context.Memberships
+            .Where(m => m.CardNumber == cardNumber)
+            .ToListAsync();
+
+        return memberships.FirstOrDefault(m => m.IsActive);
     }
 
     public async Task<bool> UpdateAsync(Membership membership)

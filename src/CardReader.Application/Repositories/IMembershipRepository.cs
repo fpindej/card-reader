@@ -4,9 +4,9 @@ namespace CardReader.Application.Repositories;
 
 public interface IMembershipRepository
 {
-    Task<bool> CreateAsync(Membership membership);
+    Task<Result<Membership>> CreateAsync(Membership membership);
     Task<Membership?> GetLatestMembershipAsync(int customerId);
-    Task<Membership?> GetCardByNumberAsync(string cardNumber);
+    Task<Membership?> GetActiveByCardNumber(string cardNumber);
     Task<bool> UpdateAsync(Membership membership);
     Task<bool> RevokeAsync(int membershipId);
 }

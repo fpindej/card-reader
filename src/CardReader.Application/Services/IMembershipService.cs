@@ -1,8 +1,10 @@
-﻿namespace CardReader.Application.Services;
+﻿using CardReader.Domain;
+
+namespace CardReader.Application.Services;
 
 public interface IMembershipService
 {
-    Task<bool> CreateMembershipAsync(int customerId, string cardNumber, DateTime? expiresAt = null);
+    Task<Result<Membership>> CreateMembershipAsync(int customerId, string cardNumber, DateTime? expiresAt = null);
     Task<bool> ValidateCardAccessAsync(string cardNumber);
     Task<bool> ExtendMembershipAsync(int customerId, int daysToExtend);
     Task<bool> RevokeMembershipAsync(int customerId);
