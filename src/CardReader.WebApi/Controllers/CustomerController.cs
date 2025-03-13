@@ -17,7 +17,7 @@ public class CustomerController : ControllerBase
 
     [HttpPost]
     [Route("create")]
-    public async Task<ActionResult<int>> CreateCustomer([FromBody] CustomerCreateRequest request)
+    public async Task<IActionResult> CreateCustomer([FromBody] CustomerCreateRequest request)
     {
         var result = await _customerService.CreateUserAsync(request.FirstName, request.LastName, request.Email);
 
@@ -25,8 +25,20 @@ public class CustomerController : ControllerBase
         {
             return BadRequest(result.Error);
         }
+        
+        var customer = result.Value!;
 
-        return Ok(new { CustomerId = result.Value!.Id , Message = "Customer created successfully." });
+        return Ok(new
+        {
+            Message = "Customer created successfully.",
+            Customer = new
+            {
+                Id = customer.Id,
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email
+            }
+        });
     }
     
     [HttpGet]

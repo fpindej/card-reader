@@ -75,7 +75,7 @@ internal class MembershipService : IMembershipService
         }
     }
 
-    public async Task<Result> ExtendMembershipAsync(int customerId, int daysToExtend)
+    public async Task<Result<Membership>> ExtendMembershipAsync(int customerId, int daysToExtend)
     {
         try
         {
@@ -84,13 +84,13 @@ internal class MembershipService : IMembershipService
             var existingMembership = await _membershipRepository.GetLatestMembershipAsync(customerId);
             if (existingMembership is null)
             {
-                return await RollbackWithFailure("Membership does not exist. Nothing to extend.");
+                return await RollbackWithFailure<Membership>("Membership does not exist. Nothing to extend.");
             }
 
             var existingCard = await _membershipRepository.GetActiveByCardNumber(existingMembership.CardNumber);
             if (existingCard?.IsActive is true && existingCard.CustomerId != customerId)
             {
-                return await RollbackWithFailure($"Card {existingCard.CardNumber} is already used by customerId {existingCard.CustomerId}.");
+                return await RollbackWithFailure<Membership>($"Card {existingCard.CardNumber} is already used by customerId {existingCard.CustomerId}.");
             }
 
             existingMembership.ExpiresAt = existingMembership is { IsActive: true, ExpiresAt: not null }
@@ -102,7 +102,7 @@ internal class MembershipService : IMembershipService
         }
         catch
         {
-            return await RollbackWithFailure("Could not extend membership.");
+            return await RollbackWithFailure<Membership>("Could not extend membership.");
         }
     }
 

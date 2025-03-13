@@ -1,4 +1,5 @@
 ﻿using CardReader.Application.Services;
+using CardReader.Domain;
 using CardReader.WebApi.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,8 +29,20 @@ public class MembershipController : ControllerBase
         {
             return BadRequest(result.Error);
         }
+        
+        var membership = result.Value!;
 
-        return Ok("Membership created successfully.");
+        return Ok(new
+        {
+            Message = "Membership created successfully.",
+            Membership = new
+            {
+                Id = membership.Id,
+                CustomerId = membership.CustomerId,
+                CardNumber = membership.CardNumber,
+                ValidTo = membership.ExpiresAt!.Value.ToString("dd/MM/yyyy")
+            }
+        });
     }
 
     [HttpPost]
@@ -58,8 +71,20 @@ public class MembershipController : ControllerBase
         {
             return BadRequest(result.Error);
         }
+        
+        var membership = result.Value!;
 
-        return Ok("Membership successfully extended.");
+        return Ok(new
+        {
+            Message = "Membership extended successfully.",
+            Membership = new
+            {
+                Id = membership.Id,
+                CustomerId = membership.CustomerId,
+                CardNumber = membership.CardNumber,
+                ValidTo = membership.ExpiresAt!.Value.ToString("dd/MM/yyyy")
+            }
+        });
     }
     
     [HttpPost]
@@ -73,7 +98,7 @@ public class MembershipController : ControllerBase
             return BadRequest(result.Error);
         }
 
-        return Ok("Membership successfully revoked.");
+        return Ok("Membership revoked successfully.");
     }
     
     [HttpGet]

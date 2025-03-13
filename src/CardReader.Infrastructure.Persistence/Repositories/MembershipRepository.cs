@@ -44,18 +44,18 @@ internal class MembershipRepository : IMembershipRepository
         return memberships.FirstOrDefault(m => m.IsActive);
     }
 
-    public async Task<Result> UpdateAsync(Membership membership)
+    public async Task<Result<Membership>> UpdateAsync(Membership membership)
     {
         var existingMembership = await _context.Memberships
             .FirstOrDefaultAsync(m => m.Id == membership.Id);
 
         if (existingMembership is null)
         {
-            return Result.Failure("Membership not found.");
+            return Result<Membership>.Failure("Membership not found.");
         }
 
         existingMembership.ExpiresAt = membership.ExpiresAt;
-        return Result.Success();
+        return Result<Membership>.Success(existingMembership);
     }
     
     public async Task<Result> RevokeAsync(int membershipId)
