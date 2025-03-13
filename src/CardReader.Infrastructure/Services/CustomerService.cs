@@ -119,4 +119,16 @@ internal class CustomerService : ICustomerService
             return false;
         }
     }
+
+    public async Task<Result<Customer>> GetByEmailAsync(string email)
+    {
+        var customer = await _customerRepository.GetByEmailAsync(email);
+
+        if (customer is null)
+        {
+            return Result<Customer>.Failure("Customer with specified email is not found.");
+        }
+        
+        return Result<Customer>.Success(customer);
+    }
 }

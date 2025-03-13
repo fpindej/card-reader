@@ -42,6 +42,22 @@ public class CustomerController : ControllerBase
 
         return Ok(new CustomerGetResponse(customer.Id, customer.FirstName, customer.LastName, customer.Email));
     }
+    
+    [HttpGet]
+    [Route("get/{email}")]
+    public async Task<ActionResult<CustomerGetResponse>> GetCustomerById([FromRoute] string email)
+    {
+        var result = await _customerService.GetByEmailAsync(email);
+    
+        if (!result.IsSuccess)
+        {
+            return NotFound(result.Error);
+        }
+        
+        var customer = result.Value!;
+
+        return Ok(new CustomerGetResponse(customer.Id, customer.FirstName, customer.LastName, customer.Email));
+    }
 
     [HttpGet]
     [Route("getall")]
