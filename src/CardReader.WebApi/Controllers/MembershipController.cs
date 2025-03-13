@@ -70,12 +70,12 @@ public class MembershipController : ControllerBase
             }
         });
     }
-    
+
     [HttpPut]
-    [Route("extend")]
-    public async Task<IActionResult> ExtendMembership([FromBody] MembershipExtendRequest request)
+    [Route("extenddays")]
+    public async Task<IActionResult> ExtendMembershipDays([FromBody] MembershipExtendDaysRequest request)
     {
-        var result = await _membershipService.ExtendMembershipAsync(
+        var result = await _membershipService.ExtendMembershipByDaysAsync(
             request.CustomerId,
             request.DaysToExtend);
 
@@ -83,7 +83,35 @@ public class MembershipController : ControllerBase
         {
             return BadRequest(result.Error);
         }
-        
+
+        var membership = result.Value!;
+
+        return Ok(new
+        {
+            Message = "Membership extended successfully.",
+            Membership = new
+            {
+                Id = membership.Id,
+                CustomerId = membership.CustomerId,
+                CardNumber = membership.CardNumber,
+                ValidTo = membership.ExpiresAt!.Value.ToString("dd/MM/yyyy")
+            }
+        });
+    }
+
+    [HttpPut]
+    [Route("extendmonths")]
+    public async Task<IActionResult> ExtendMembershipMonths([FromBody] MembershipExtendMonthsRequest request)
+    {
+        var result = await _membershipService.ExtendMembershipByMonthsAsync(
+            request.CustomerId,
+            request.MonthsToExtend);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.Error);
+        }
+
         var membership = result.Value!;
 
         return Ok(new
