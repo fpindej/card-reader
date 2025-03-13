@@ -50,16 +50,16 @@ public class MembershipController : ControllerBase
     [Route("extend")]
     public async Task<IActionResult> ExtendMembership([FromBody] MembershipExtendRequest request)
     {
-        var extended = await _membershipService.ExtendMembershipAsync(
+        var result = await _membershipService.ExtendMembershipAsync(
             request.CustomerId,
             request.DaysToExtend);
 
-        if (!extended)
+        if (!result.IsSuccess)
         {
-            return BadRequest(new { message = "Could not extend membership." });
+            return BadRequest(result.Error);
         }
 
-        return Ok("Membership extended successfully.");
+        return Ok("Membership successfully extended.");
     }
     
     [HttpPost]

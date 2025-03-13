@@ -44,7 +44,7 @@ internal class MembershipService : IMembershipService
             if (existingCard?.IsActive is true)
             {
                 await _uow.RollbackTransactionAsync();
-                return Result<Membership>.Failure("Card is already in use.");
+                return Result<Membership>.Failure($"Card {existingCard.CardNumber} is already used by customerId {existingCard.CustomerId}.");
             }
 
             var membership = new Membership
@@ -54,15 +54,17 @@ internal class MembershipService : IMembershipService
                 ExpiresAt = expiresAt
             };
 
-            var created = await _membershipRepository.CreateAsync(membership);
-            if (!created.IsSuccess)
+            var result = await _membershipRepository.CreateAsync(membership);
+            if (result.IsSuccess)
+            {
+                await _uow.CommitTransactionAsync();
+            }
+            else
             {
                 await _uow.RollbackTransactionAsync();
-                return created;
             }
 
-            await _uow.CommitTransactionAsync();
-            return created;
+            return result;
         }
         catch
         {
@@ -86,37 +88,46 @@ internal class MembershipService : IMembershipService
         }
     }
 
-    public async Task<bool> ExtendMembershipAsync(int customerId, int daysToExtend)
+    public async Task<Result> ExtendMembershipAsync(int customerId, int daysToExtend)
     {
         try
         {
             await _uow.BeginTransactionAsync();
 
-            var membership = await _membershipRepository.GetLatestMembershipAsync(customerId);
-            if (membership is null)
+            var existingMembership = await _membershipRepository.GetLatestMembershipAsync(customerId);
+            if (existingMembership is null)
             {
                 await _uow.RollbackTransactionAsync();
-                return false;
+                return Result.Failure("Membership does not exist. Nothing to extend.");
+            }
+            
+            var existingCard = await _membershipRepository.GetActiveByCardNumber(existingMembership.CardNumber);
+            if (existingCard?.IsActive is true)
+            {
+                await _uow.RollbackTransactionAsync();
+                return Result.Failure($"Card {existingCard.CardNumber} is already used by customerId {existingCard.CustomerId}.");
             }
 
-            membership.ExpiresAt = membership is { IsActive: true, ExpiresAt: not null }
-                ? membership.ExpiresAt.Value.AddDays(daysToExtend)
+            existingMembership.ExpiresAt = existingMembership is { IsActive: true, ExpiresAt: not null }
+                ? existingMembership.ExpiresAt.Value.AddDays(daysToExtend)
                 : DateTime.UtcNow.AddDays(daysToExtend);
 
-            var updated = await _membershipRepository.UpdateAsync(membership);
-            if (!updated)
+            var result = await _membershipRepository.UpdateAsync(existingMembership);
+            if (result.IsSuccess)
+            {
+                await _uow.CommitTransactionAsync();
+            }
+            else
             {
                 await _uow.RollbackTransactionAsync();
-                return false;
             }
 
-            await _uow.CommitTransactionAsync();
-            return true;
+            return result;
         }
         catch
         {
             await _uow.RollbackTransactionAsync();
-            return false;
+            return Result.Failure("Could not extend membership.");
         }
     }
     
