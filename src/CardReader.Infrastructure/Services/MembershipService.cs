@@ -102,7 +102,7 @@ internal class MembershipService : IMembershipService
             }
             
             var existingCard = await _membershipRepository.GetActiveByCardNumber(existingMembership.CardNumber);
-            if (existingCard?.IsActive is true)
+            if (existingCard?.IsActive is true && existingCard.CustomerId != customerId)
             {
                 await _uow.RollbackTransactionAsync();
                 return Result.Failure($"Card {existingCard.CardNumber} is already used by customerId {existingCard.CustomerId}.");
