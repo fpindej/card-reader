@@ -29,22 +29,19 @@ internal class MembershipService : IMembershipService
             var existingCustomer = await _customerRepository.GetByIdAsync(customerId);
             if (existingCustomer is null)
             {
-                await _uow.RollbackTransactionAsync();
-                return Result<Membership>.Failure("Customer not found.");
+                return await RollbackWithFailure<Membership>("Customer not found.");
             }
-            
+
             var existingMembership = await _membershipRepository.GetLatestMembershipAsync(customerId);
             if (existingMembership?.IsActive is true)
             {
-                await _uow.RollbackTransactionAsync();
-                return Result<Membership>.Failure("Customer already has an active membership.");
+                return await RollbackWithFailure<Membership>("Customer already has an active membership.");
             }
-            
+
             var existingCard = await _membershipRepository.GetActiveByCardNumber(cardNumber);
             if (existingCard?.IsActive is true)
             {
-                await _uow.RollbackTransactionAsync();
-                return Result<Membership>.Failure($"Card {existingCard.CardNumber} is already used by customerId {existingCard.CustomerId}.");
+                return await RollbackWithFailure<Membership>($"Card {existingCard.CardNumber} is already used by customerId {existingCard.CustomerId}.");
             }
 
             var membership = new Membership
@@ -55,21 +52,11 @@ internal class MembershipService : IMembershipService
             };
 
             var result = await _membershipRepository.CreateAsync(membership);
-            if (result.IsSuccess)
-            {
-                await _uow.CommitTransactionAsync();
-            }
-            else
-            {
-                await _uow.RollbackTransactionAsync();
-            }
-
-            return result;
+            return await CommitOrRollback(result);
         }
         catch
         {
-            await _uow.RollbackTransactionAsync();
-            return Result<Membership>.Failure("Could not complete membership creation.");
+            return await RollbackWithFailure<Membership>("Could not complete membership creation.");
         }
     }
 
@@ -97,15 +84,13 @@ internal class MembershipService : IMembershipService
             var existingMembership = await _membershipRepository.GetLatestMembershipAsync(customerId);
             if (existingMembership is null)
             {
-                await _uow.RollbackTransactionAsync();
-                return Result.Failure("Membership does not exist. Nothing to extend.");
+                return await RollbackWithFailure("Membership does not exist. Nothing to extend.");
             }
-            
+
             var existingCard = await _membershipRepository.GetActiveByCardNumber(existingMembership.CardNumber);
             if (existingCard?.IsActive is true && existingCard.CustomerId != customerId)
             {
-                await _uow.RollbackTransactionAsync();
-                return Result.Failure($"Card {existingCard.CardNumber} is already used by customerId {existingCard.CustomerId}.");
+                return await RollbackWithFailure($"Card {existingCard.CardNumber} is already used by customerId {existingCard.CustomerId}.");
             }
 
             existingMembership.ExpiresAt = existingMembership is { IsActive: true, ExpiresAt: not null }
@@ -113,24 +98,14 @@ internal class MembershipService : IMembershipService
                 : DateTime.UtcNow.AddDays(daysToExtend);
 
             var result = await _membershipRepository.UpdateAsync(existingMembership);
-            if (result.IsSuccess)
-            {
-                await _uow.CommitTransactionAsync();
-            }
-            else
-            {
-                await _uow.RollbackTransactionAsync();
-            }
-
-            return result;
+            return await CommitOrRollback(result);
         }
         catch
         {
-            await _uow.RollbackTransactionAsync();
-            return Result.Failure("Could not extend membership.");
+            return await RollbackWithFailure("Could not extend membership.");
         }
     }
-    
+
     public async Task<Result> RevokeMembershipAsync(int customerId)
     {
         try
@@ -140,32 +115,58 @@ internal class MembershipService : IMembershipService
             var existingMembership = await _membershipRepository.GetLatestMembershipAsync(customerId);
             if (existingMembership is null)
             {
-                await _uow.RollbackTransactionAsync();
-                return Result.Failure("Membership does not exist. Nothing to revoke.");
+                return await RollbackWithFailure("Membership does not exist. Nothing to revoke.");
             }
-            
+
             if (existingMembership.IsActive is false)
             {
-                await _uow.RollbackTransactionAsync();
-                return Result.Failure($"No active membership found for customerId {customerId}.");
+                return await RollbackWithFailure($"No active membership found for customerId {customerId}.");
             }
 
             var result = await _membershipRepository.RevokeAsync(existingMembership.Id);
-            if (result.IsSuccess)
-            {
-                await _uow.CommitTransactionAsync();
-            }
-            else
-            {
-                await _uow.RollbackTransactionAsync();
-            }
-
-            return Result.Success();
+            return await CommitOrRollback(result);
         }
         catch
         {
-            await _uow.RollbackTransactionAsync();
-            return Result.Failure("Could not complete membership revocation.");
+            return await RollbackWithFailure("Could not complete membership revocation.");
         }
+    }
+
+    private async Task<Result> CommitOrRollback(Result result)
+    {
+        if (result.IsSuccess)
+        {
+            await _uow.CommitTransactionAsync();
+        }
+        else
+        {
+            await _uow.RollbackTransactionAsync();
+        }
+        return result;
+    }
+
+    private async Task<Result<T>> CommitOrRollback<T>(Result<T> result)
+    {
+        if (result.IsSuccess)
+        {
+            await _uow.CommitTransactionAsync();
+        }
+        else
+        {
+            await _uow.RollbackTransactionAsync();
+        }
+        return result;
+    }
+
+    private async Task<Result> RollbackWithFailure(string error)
+    {
+        await _uow.RollbackTransactionAsync();
+        return Result.Failure(error);
+    }
+
+    private async Task<Result<T>> RollbackWithFailure<T>(string error)
+    {
+        await _uow.RollbackTransactionAsync();
+        return Result<T>.Failure(error);
     }
 }
