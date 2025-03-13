@@ -58,17 +58,17 @@ internal class MembershipRepository : IMembershipRepository
         return Result.Success();
     }
     
-    public async Task<bool> RevokeAsync(int membershipId)
+    public async Task<Result> RevokeAsync(int membershipId)
     {
         var membership = await _context.Memberships
             .FirstOrDefaultAsync(m => m.Id == membershipId);
 
         if (membership is null)
         {
-            return false;
+            return Result.Failure("Membership not found.");
         }
 
         membership.ExpiresAt = DateTime.UtcNow;
-        return true;
+        return Result.Success();
     }
 }

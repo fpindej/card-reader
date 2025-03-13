@@ -131,33 +131,41 @@ internal class MembershipService : IMembershipService
         }
     }
     
-    public async Task<bool> RevokeMembershipAsync(int customerId)
+    public async Task<Result> RevokeMembershipAsync(int customerId)
     {
         try
         {
             await _uow.BeginTransactionAsync();
 
-            var membership = await _membershipRepository.GetLatestMembershipAsync(customerId);
-            if (membership is null || !membership.IsActive)
+            var existingMembership = await _membershipRepository.GetLatestMembershipAsync(customerId);
+            if (existingMembership is null)
             {
                 await _uow.RollbackTransactionAsync();
-                return false;
+                return Result.Failure("Membership does not exist. Nothing to revoke.");
             }
-
-            var revoked = await _membershipRepository.RevokeAsync(membership.Id);
-            if (!revoked)
+            
+            if (existingMembership.IsActive is false)
             {
                 await _uow.RollbackTransactionAsync();
-                return false;
+                return Result.Failure($"No active membership found for customerId {customerId}.");
             }
 
-            await _uow.CommitTransactionAsync();
-            return true;
+            var result = await _membershipRepository.RevokeAsync(existingMembership.Id);
+            if (result.IsSuccess)
+            {
+                await _uow.CommitTransactionAsync();
+            }
+            else
+            {
+                await _uow.RollbackTransactionAsync();
+            }
+
+            return Result.Success();
         }
         catch
         {
             await _uow.RollbackTransactionAsync();
-            return false;
+            return Result.Failure("Could not complete membership revocation.");
         }
     }
 }

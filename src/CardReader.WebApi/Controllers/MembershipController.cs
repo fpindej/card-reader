@@ -66,13 +66,13 @@ public class MembershipController : ControllerBase
     [Route("revoke")]
     public async Task<IActionResult> RevokeMembership([FromBody] MembershipRevokeRequest request)
     {
-        var revoked = await _membershipService.RevokeMembershipAsync(request.CustomerId);
+        var result = await _membershipService.RevokeMembershipAsync(request.CustomerId);
 
-        if (!revoked)
+        if (!result.IsSuccess)
         {
-            return BadRequest(new { message = "Could not revoke membership." });
+            return BadRequest(result.Error);
         }
 
-        return Ok("Membership revoked successfully.");
+        return Ok("Membership successfully revoked.");
     }
 }

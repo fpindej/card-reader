@@ -8,5 +8,5 @@ public interface IMembershipRepository
     Task<Membership?> GetLatestMembershipAsync(int customerId);
     Task<Membership?> GetActiveByCardNumber(string cardNumber);
     Task<Result> UpdateAsync(Membership membership);
-    Task<bool> RevokeAsync(int membershipId);
+    Task<Result> RevokeAsync(int membershipId);
 }
