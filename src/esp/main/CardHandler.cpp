@@ -9,7 +9,7 @@
 String activeCards[MAX_CARDS];
 int cardCount = 0;
 
-const char* CardHandler::endpointGetActiveCards = "https://gym.pindej.cz/api/rfidcard/getallactive";
+const char* CardHandler::endpointGetActiveCards = "https://gym.pindej.cz/api/membership/getactivecards";
 
 void CardHandler::updateActiveCards() 
 {
