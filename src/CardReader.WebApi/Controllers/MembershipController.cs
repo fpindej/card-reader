@@ -21,7 +21,7 @@ public class MembershipController : ControllerBase
     {
         var result = await _membershipService.CreateMembershipAsync(
             request.CustomerId, 
-            request.CardNumber, 
+            request.CardNumber.ToLowerInvariant(), // ToDo: figure out a cleaner way to store lowercase variant
             request.ExpiresAt);
 
         if (!result.IsSuccess)
