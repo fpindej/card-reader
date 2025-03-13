@@ -8,4 +8,5 @@ public interface IMembershipService
     Task<Result> ValidateCardAccessAsync(string cardNumber);
     Task<Result> ExtendMembershipAsync(int customerId, int daysToExtend);
     Task<Result> RevokeMembershipAsync(int customerId);
+    Task<Result<List<string>>> GetActiveCardNumbersAsync();
 }

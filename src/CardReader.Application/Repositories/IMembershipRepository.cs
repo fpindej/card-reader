@@ -9,4 +9,5 @@ public interface IMembershipRepository
     Task<Membership?> GetActiveByCardNumber(string cardNumber);
     Task<Result> UpdateAsync(Membership membership);
     Task<Result> RevokeAsync(int membershipId);
+    Task<List<string>> GetActiveCardNumbersAsync();
 }

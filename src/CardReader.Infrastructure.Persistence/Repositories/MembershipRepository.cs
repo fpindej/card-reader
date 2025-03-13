@@ -71,4 +71,13 @@ internal class MembershipRepository : IMembershipRepository
         membership.ExpiresAt = DateTime.UtcNow;
         return Result.Success();
     }
+
+    public async Task<List<string>> GetActiveCardNumbersAsync()
+    {
+        var now = DateTime.UtcNow;
+        return await _context.Memberships
+            .Where(m => m.ExpiresAt == null || m.ExpiresAt > now)
+            .Select(m => m.CardNumber)
+            .ToListAsync();
+    }
 }

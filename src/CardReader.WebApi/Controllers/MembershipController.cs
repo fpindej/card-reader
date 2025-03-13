@@ -75,4 +75,18 @@ public class MembershipController : ControllerBase
 
         return Ok("Membership successfully revoked.");
     }
+    
+    [HttpGet]
+    [Route("getactivecards")]
+    public async Task<IActionResult> GetActiveCards()
+    {
+        var result = await _membershipService.GetActiveCardNumbersAsync();
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return Ok(result.Value);
+    }
 }

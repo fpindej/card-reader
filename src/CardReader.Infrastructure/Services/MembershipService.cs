@@ -132,6 +132,19 @@ internal class MembershipService : IMembershipService
         }
     }
 
+    public async Task<Result<List<string>>> GetActiveCardNumbersAsync()
+    {
+        try
+        {
+            var activeCards = await _membershipRepository.GetActiveCardNumbersAsync();
+            return Result<List<string>>.Success(activeCards);
+        }
+        catch
+        {
+            return Result<List<string>>.Failure("Failed to retrieve active card numbers.");
+        }
+    }
+
     private async Task<Result> CommitOrRollback(Result result)
     {
         if (result.IsSuccess)
