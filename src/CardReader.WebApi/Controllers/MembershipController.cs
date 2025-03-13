@@ -46,17 +46,29 @@ public class MembershipController : ControllerBase
     }
 
     [HttpPost]
-    [Route("validate/{cardNumber}")]
-    public async Task<IActionResult> ValidateCard(string cardNumber)
+    [Route("checkactive/{cardNumber}")]
+    public async Task<IActionResult> CheckMembershipByCard(string cardNumber)
     {
-        var result = await _membershipService.ValidateCardAccessAsync(cardNumber);
+        var result = await _membershipService.CheckMembershipByCardNumberAsync(cardNumber);
         
         if (!result.IsSuccess)
         {
             return BadRequest(result.Error);
         }
         
-        return Ok("Card is valid.");
+        var membership = result.Value!;
+        
+        return Ok(new
+        {
+            Message = "Membership is active.",
+            Membership = new
+            {
+                Id = membership.Id,
+                CustomerId = membership.CustomerId,
+                CardNumber = membership.CardNumber,
+                ValidTo = result.Value!.ExpiresAt!.Value.ToString("dd/MM/yyyy")
+            }
+        });
     }
     
     [HttpPut]

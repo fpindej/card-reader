@@ -38,6 +38,7 @@ internal class MembershipRepository : IMembershipRepository
     public async Task<Membership?> GetActiveByCardNumber(string cardNumber)
     {
         var memberships = await _context.Memberships
+            .Include(m => m.Customer)
             .Where(m => m.CardNumber == cardNumber)
             .ToListAsync();
 
