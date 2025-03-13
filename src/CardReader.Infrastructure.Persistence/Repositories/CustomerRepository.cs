@@ -14,16 +14,16 @@ internal class CustomerRepository : ICustomerRepository
         _context = context;
     }
 
-    public async Task<int?> CreateCustomerAsync(Customer customer)
+    public async Task<Result<Customer>> CreateCustomerAsync(Customer customer)
     {
         try
         {
-            var entry = await _context.Customers.AddAsync(customer);
-            return entry.Entity.Id;
+            await _context.Customers.AddAsync(customer);
+            return Result<Customer>.Success(customer);
         }
-        catch (DbUpdateException)
+        catch
         {
-            return null;
+            return Result<Customer>.Failure("Failed to create customer.");
         }
     }
 
@@ -82,5 +82,15 @@ internal class CustomerRepository : ICustomerRepository
 
         _context.Customers.Remove(customer);
         return true;
+    }
+
+    public Task<Customer?> GetByEmailAsync(string email)
+    {
+        var customer = _context.Customers
+            .AsNoTracking()
+            .Where(u => u.Email == email)
+            .FirstOrDefaultAsync();
+
+        return customer;
     }
 }

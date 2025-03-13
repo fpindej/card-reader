@@ -16,7 +16,7 @@ internal class CustomerService : ICustomerService
         _uow = uow;
     }
 
-    public async Task<int?> CreateUserAsync(string firstName, string lastName, string email)
+    public async Task<Result<Customer>> CreateUserAsync(string firstName, string lastName, string email)
     {
         var user = new Customer
         {
@@ -28,15 +28,30 @@ internal class CustomerService : ICustomerService
         try
         {
             await _uow.BeginTransactionAsync();
-            var userId = await _customerRepository.CreateCustomerAsync(user);
-            await _uow.CommitTransactionAsync();
 
-            return userId;
+            var existingEmail = await _customerRepository.GetByEmailAsync(user.Email);
+            if (existingEmail is not null)
+            {
+                await _uow.RollbackTransactionAsync();
+                return Result<Customer>.Failure("Email already exists");
+            }
+            
+            var result = await _customerRepository.CreateCustomerAsync(user);
+            if (result.IsSuccess)
+            {
+                await _uow.CommitTransactionAsync();
+            }
+            else
+            {
+                await _uow.RollbackTransactionAsync();
+            }
+
+            return result;
         }
         catch
         {
             await _uow.RollbackTransactionAsync();
-            return null;
+            return Result<Customer>.Failure("Failed to create customer.");
         }
     }
 

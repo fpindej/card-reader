@@ -19,14 +19,14 @@ public class CustomerController : ControllerBase
     [Route("create")]
     public async Task<ActionResult<int>> CreateCustomer([FromBody] CustomerCreateRequest request)
     {
-        var userId = await _customerService.CreateUserAsync(request.FirstName, request.LastName, request.Email);
+        var result = await _customerService.CreateUserAsync(request.FirstName, request.LastName, request.Email);
 
-        if (userId is null)
+        if (!result.IsSuccess)
         {
-            return BadRequest(new { message = "Customer could not be created." });
+            return BadRequest(result.Error);
         }
 
-        return Ok(userId);
+        return Ok(new { CustomerId = result.Value!.Id , Message = "Customer created successfully." });
     }
     
     [HttpGet]
