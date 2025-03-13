@@ -2,6 +2,7 @@
 #include <MFRC522.h>
 #include "RFIDHandler.h"
 #include "CardHandler.h"
+#include "RelayHandler.h"
 
 // Pin Definitions
 #define SS_PIN 5
@@ -27,7 +28,7 @@ void RFIDHandler::checkCard()
     if (CardHandler::isCardActive(rfidId)) 
     {
         Serial.println("Access granted for: " + rfidId);
-        // Add code to grant access
+        RelayHandler::turnOn();
     } 
     else 
     {
