@@ -1,4 +1,5 @@
-﻿using CardReader.Application.Repositories;
+﻿using CardReader.Application;
+using CardReader.Application.Repositories;
 using CardReader.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,9 +16,10 @@ public static class ServiceCollectionExtensions
             var connectionString = configuration.GetConnectionString("Database");
             opt.UseNpgsql(connectionString);
         });
-
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IRfidCardRepository, RfidCardRepository>();
+        
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<IMembershipRepository, MembershipRepository>();
 
         return services;
     }

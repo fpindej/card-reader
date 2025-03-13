@@ -3,6 +3,7 @@ using System;
 using CardReader.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CardReader.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(GymDoorDbContext))]
-    partial class GymDoorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250312194655_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,27 @@ namespace CardReader.Infrastructure.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("CardReader.Domain.AccessCard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CardNumber")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CardNumber")
+                        .IsUnique();
+
+                    b.ToTable("AccessCards");
+                });
 
             modelBuilder.Entity("CardReader.Domain.Customer", b =>
                 {
@@ -44,6 +68,9 @@ namespace CardReader.Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<DateTime>("YearOfBirth")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
@@ -57,10 +84,8 @@ namespace CardReader.Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CardNumber")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
+                    b.Property<int>("AccessCardId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -73,7 +98,12 @@ namespace CardReader.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("ExpiresAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AccessCardId");
 
                     b.HasIndex("CustomerId");
 
@@ -82,13 +112,26 @@ namespace CardReader.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("CardReader.Domain.Membership", b =>
                 {
+                    b.HasOne("CardReader.Domain.AccessCard", "AccessCard")
+                        .WithMany("Memberships")
+                        .HasForeignKey("AccessCardId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("CardReader.Domain.Customer", "Customer")
                         .WithMany("Memberships")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("AccessCard");
+
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("CardReader.Domain.AccessCard", b =>
+                {
+                    b.Navigation("Memberships");
                 });
 
             modelBuilder.Entity("CardReader.Domain.Customer", b =>
