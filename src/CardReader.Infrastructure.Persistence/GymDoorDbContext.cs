@@ -9,6 +9,8 @@ internal class GymDoorDbContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<Membership> Memberships { get; init; }
 
+    public DbSet<AccessLog> AccessLogs { get; init; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -47,6 +49,24 @@ internal class GymDoorDbContext(DbContextOptions options) : DbContext(options)
                 .WithMany(u => u.Memberships)
                 .HasForeignKey(m => m.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<AccessLog>(builder =>
+        {
+            builder.HasKey(a => a.Id);
+
+            builder.Property(a => a.Id)
+                .UseIdentityColumn();
+
+            builder.Property(a => a.EventDateTime)
+                .IsRequired();
+
+            builder.Property(a => a.CardNumber)
+                .IsRequired()
+                .HasMaxLength(64);
+
+            builder.Property(a => a.IsSuccessful)
+                .IsRequired();
         });
     }
 }

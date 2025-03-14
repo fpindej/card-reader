@@ -1,5 +1,4 @@
 ﻿using CardReader.Application.Services;
-using CardReader.Domain;
 using CardReader.WebApi.Dtos;
 using Microsoft.AspNetCore.Mvc;
 

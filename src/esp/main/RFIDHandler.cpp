@@ -3,6 +3,7 @@
 #include "RFIDHandler.h"
 #include "CardHandler.h"
 #include "RelayHandler.h"
+#include "LogHandler.h"
 
 // Pin Definitions
 #define SS_PIN 5
@@ -27,8 +28,9 @@ void RFIDHandler::checkCard()
     CardHandler::fetchCardsFromServer();
     String rfidId = constructRfidId();
 
-    // Check if the card is active
-    if (CardHandler::isCardActive(rfidId)) 
+    bool isAccessGranted = CardHandler::isCardActive(rfidId);
+
+    if (isAccessGranted) 
     {
         Serial.println("Access granted for: " + rfidId);
         RelayHandler::activateRelay();
@@ -38,6 +40,8 @@ void RFIDHandler::checkCard()
         Serial.println("Access denied for: " + rfidId);
         // Add code to deny access
     }
+
+    LogHandler::logAccess(rfidId, isAccessGranted);
 
     // Halt PICC and stop encryption
     rfid.PICC_HaltA();
