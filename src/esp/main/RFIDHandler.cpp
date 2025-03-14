@@ -2,34 +2,24 @@
 #include <MFRC522.h>
 #include "RFIDHandler.h"
 #include "CardHandler.h"
+#include "RelayHandler.h"
 
 // Pin Definitions
 #define SS_PIN 5
 #define RST_PIN 0
-#define RELAY_PIN 26
 
 MFRC522 rfid(SS_PIN, RST_PIN);  // Define the RFID object
-
-unsigned long relayStartTime = 0;
-bool relayActive = false;
 
 void RFIDHandler::init() 
 {
     SPI.begin();            // Initialize SPI bus
     rfid.PCD_Init();       // Initialize MFRC522
-    pinMode(RELAY_PIN, OUTPUT);
-    digitalWrite(RELAY_PIN, LOW);
     Serial.println("RFID reader initialized.");
 }
 
 void RFIDHandler::checkCard() 
 {
-    if (relayActive && (millis() - relayStartTime >= 2000))
-    {
-      digitalWrite(RELAY_PIN, LOW);
-      relayActive = false;
-      Serial.println("Relay turned OFF.");
-    }
+    RelayHandler::checkAndUpdateRelay();
 
     if (!rfid.PICC_IsNewCardPresent()) return;  // Check for a new card
     if (!rfid.PICC_ReadCardSerial()) return;   // Read card serial
@@ -41,10 +31,7 @@ void RFIDHandler::checkCard()
     if (CardHandler::isCardActive(rfidId)) 
     {
         Serial.println("Access granted for: " + rfidId);
-        digitalWrite(RELAY_PIN, HIGH); // Turn on the relay
-        relayStartTime = millis(); // Record when the relay was turned on
-        relayActive = true; // Mark relay as active
-        Serial.println("Relay turned ON.");
+        RelayHandler::activateRelay();
     }
     else 
     {
