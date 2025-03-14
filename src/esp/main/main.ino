@@ -14,6 +14,7 @@ void setup()
 
 void loop() 
 {
+    WiFiManager::checkAndReconnect();
     CardHandler::updateActiveCards();
     RFIDHandler::checkCard();
 }
