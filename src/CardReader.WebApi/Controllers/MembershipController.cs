@@ -154,4 +154,19 @@ public class MembershipController : ControllerBase
 
         return Ok(result.Value);
     }
+
+    [HttpPost]
+    [Route("getallcards")]
+    public async Task<IActionResult> GetAllCards()
+    {
+        var result = await _membershipService.GetAllCardsAsync();
+        
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return Ok(result.Value);
+
+    }
 }

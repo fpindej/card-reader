@@ -124,6 +124,19 @@ internal class MembershipService : IMembershipService
             return Result<List<string>>.Failure("Failed to retrieve active card numbers.");
         }
     }
+
+    public async Task<Result<List<string>>> GetAllCardsAsync()
+    {
+        try
+        {
+            var activeCards = await _membershipRepository.GetAllCards();
+            return Result<List<string>>.Success(activeCards);
+        }
+        catch
+        {
+            return Result<List<string>>.Failure("Failed to retrieve active card numbers.");
+        }
+    }
     
     private async Task<Result<Membership>> ExtendMembershipAsync(int customerId, Func<DateTime, DateTime> extendDate)
     {

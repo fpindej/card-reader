@@ -81,4 +81,12 @@ internal class MembershipRepository : IMembershipRepository
             .Select(m => m.CardNumber)
             .ToListAsync();
     }
+    
+    public async Task<List<string>> GetAllCards()
+    {
+        return await _context.Memberships
+            .Select(m => m.CardNumber)
+            .Distinct()
+            .ToListAsync();
+    }
 }

@@ -10,4 +10,5 @@ public interface IMembershipService
     Task<Result<Membership>> ExtendMembershipByMonthsAsync(int customerId, int monthsToExtend);
     Task<Result> RevokeMembershipAsync(int customerId);
     Task<Result<List<string>>> GetActiveCardNumbersAsync();
+    Task<Result<List<string>>> GetAllCardsAsync();
 }
