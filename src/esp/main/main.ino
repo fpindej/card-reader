@@ -2,6 +2,7 @@
 #include "CardHandler.h"
 #include "RFIDHandler.h"
 #include "RelayHandler.h"
+#include "RemoteHandler.h"
 
 void setup() 
 {

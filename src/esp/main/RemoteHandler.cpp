@@ -1,15 +1,11 @@
 #include "RemoteHandler.h"
+#include "RelayHandler.h"
 
-// Initialize static members
 WebServer RemoteHandler::server(80);
 const char* RemoteHandler::loginUsername = "admin";
 const char* RemoteHandler::loginPassword = "password";
 
 void RemoteHandler::init() {
-    // Initialize the relay pin
-    pinMode(RELAY_PIN, OUTPUT);
-    digitalWrite(RELAY_PIN, LOW); // Ensure the relay starts in the OFF state
-
     // Serve the login page
     server.on("/", handleRoot); // Root page (login page)
     server.on("/open", handleOpen); // Endpoint to open the door
@@ -57,11 +53,7 @@ void RemoteHandler::handleOpen() {
         String password = server.arg("password");
 
         if (username == loginUsername && password == loginPassword) {
-            // Credentials are correct, open the door
-            digitalWrite(RELAY_PIN, HIGH); // Turn on the relay
-            delay(2000); // Keep the relay on for 2 seconds
-            digitalWrite(RELAY_PIN, LOW); // Turn off the relay
-
+            RelayHandler::activateRelay();
             // Send a success response
             server.send(200, "text/plain", "Door opened!");
         } else {
