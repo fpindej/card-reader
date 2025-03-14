@@ -10,6 +10,7 @@ void setup()
     RFIDHandler::init();
     RelayHandler::init();
     CardHandler::fetchCardsFromServer();
+    RemoteHandler::init();
 }
 
 void loop() 
@@ -17,4 +18,5 @@ void loop()
     WiFiManager::checkAndReconnect();
     CardHandler::updateActiveCards();
     RFIDHandler::checkCard();
+    RemoteHandler::handleClient();
 }
