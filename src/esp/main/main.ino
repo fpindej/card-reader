@@ -3,6 +3,7 @@
 #include "RFIDHandler.h"
 #include "RelayHandler.h"
 #include "RemoteHandler.h"
+#include "LogHandler.h"
 
 void setup() 
 {
@@ -12,6 +13,7 @@ void setup()
     RelayHandler::init();
     CardHandler::fetchCardsFromServer();
     RemoteHandler::init();
+    LogHandler::init();
 }
 
 void loop() 

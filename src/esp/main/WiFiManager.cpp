@@ -1,6 +1,7 @@
 #include <WiFi.h>
 #include "WiFiManager.h"
 #include "TimeManager.h"
+#include "LogHandler.h"
 
 const char* WiFiManager::ssid = "<WIFI_SSID>";
 const char* WiFiManager::password = "<WIFI_PASSWORD>";
@@ -48,7 +49,7 @@ void WiFiManager::checkAndReconnect()
         lastReconnectAttempt = currentMillis;
     }
     
-    // If we just got connected, print the IP address and resynchronize the NTP
+    // If we just got connected, print the IP address and resynchronize the NTP and process queued access logs
     static bool wasConnected = false;
     bool isNowConnected = isConnected();
     
@@ -56,6 +57,7 @@ void WiFiManager::checkAndReconnect()
         Serial.println("WiFi reconnected successfully");
         Serial.print("IP address: ");
         Serial.println(WiFi.localIP());
+        LogHandler::processQueuedLogs();
         TimeManager::initialize();
     }
     
