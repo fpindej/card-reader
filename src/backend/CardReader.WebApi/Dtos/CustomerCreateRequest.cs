@@ -1,3 +1,8 @@
-﻿namespace CardReader.WebApi.Dtos;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record CustomerCreateRequest(string FirstName, string LastName, string Email);
+namespace CardReader.WebApi.Dtos;
+
+public record CustomerCreateRequest(
+    [Required] [MaxLength(50)] string FirstName,
+    [Required] [MaxLength(50)] string LastName,
+    [Required] [EmailAddress] string Email);
