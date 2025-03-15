@@ -1,6 +1,4 @@
 #include <Arduino.h>
-#include <ArduinoJson.h>
-#include <MFRC522.h>
 
 #include "WiFiManager.h"
 #include "CardHandler.h"

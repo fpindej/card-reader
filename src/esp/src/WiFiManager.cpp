@@ -1,10 +1,13 @@
+#include <Arduino.h>
+
 #include <WiFi.h>
 #include "WiFiManager.h"
 #include "TimeManager.h"
 #include "LogHandler.h"
+#include ".env.h"
 
-const char* WiFiManager::ssid = "filipiphone";
-const char* WiFiManager::password = "Filisovo69";
+const char* WiFiManager::ssid = WIFI_SSID;
+const char* WiFiManager::password = WIFI_PASSWORD;
 unsigned long WiFiManager::lastReconnectAttempt = 0;
 
 void WiFiManager::connect() 

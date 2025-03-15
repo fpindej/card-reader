@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #include <SPI.h>
 #include <MFRC522.h>
 #include "RFIDHandler.h"
@@ -5,11 +7,10 @@
 #include "RelayHandler.h"
 #include "LogHandler.h"
 
-// Pin Definitions
-#define SS_PIN 5
-#define RST_PIN 0
+#define SS_PIN 5  // SDA
+#define RST_PIN 0 // RST
 
-MFRC522 rfid(SS_PIN, RST_PIN);  // Define the RFID object
+MFRC522 rfid(SS_PIN, RST_PIN);
 
 void RFIDHandler::init() 
 {
