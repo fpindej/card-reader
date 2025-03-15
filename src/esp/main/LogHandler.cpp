@@ -1,3 +1,4 @@
+#include <ArduinoJson.h>
 #include "LogHandler.h"
 #include <HTTPClient.h>
 #include <WiFi.h>
@@ -15,8 +16,12 @@ void LogHandler::logAccess(const String& cardNumber, bool isSuccessful) {
     http.begin(LOG_ENDPOINT);
     http.addHeader("Content-Type", "application/json");
 
-    // Construct the JSON payload
-    String jsonPayload = "{\"cardNumber\":\"" + cardNumber + "\",\"isSuccessful\":" + (isSuccessful ? "true" : "false") + "}";
+    JsonDocument doc;
+    doc["cardNumber"] = cardNumber;
+    doc["isSuccessful"] = isSuccessful;
+
+    String jsonPayload;
+    serializeJson(doc, jsonPayload);
 
     int httpResponseCode = http.POST(jsonPayload);
 
