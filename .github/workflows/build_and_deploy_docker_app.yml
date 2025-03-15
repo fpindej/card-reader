@@ -3,6 +3,8 @@ name: Build and Deploy Docker Application
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'src/backend/**'
 
 jobs:
   build_docker_image:
@@ -14,14 +16,14 @@ jobs:
 
       - name: Inject Secrets into appsettings.Production.json
         run: |
-          sed -i 's|<DB_CONNECTION_STRING>|'"${{ secrets.DB_CONNECTION_STRING }}"'|g' src/CardReader.WebApi/appsettings.json
+          sed -i 's|<DB_CONNECTION_STRING>|'"${{ secrets.DB_CONNECTION_STRING }}"'|g' src/backend/CardReader.WebApi/appsettings.json
 
       - name: Set Timestamp Tag for Docker Image
         run: echo "IMAGE_TAG=$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
 
       - name: Build and Tag Docker Image
         run: |
-          docker build -t card-reader-api:${{ env.IMAGE_TAG }} -f src/CardReader.WebApi/Dockerfile src
+          docker build -t card-reader-api:${{ env.IMAGE_TAG }} -f src/backend/CardReader.WebApi/Dockerfile src/backend
           docker tag card-reader-api:${{ env.IMAGE_TAG }} card-reader-api:latest
 
       - name: Save Docker Image as Tar File
