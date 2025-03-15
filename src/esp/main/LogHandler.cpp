@@ -6,7 +6,7 @@
 #include "WiFiManager.h"
 
 const char* LogHandler::LOG_ENDPOINT = "https://gym.pindej.cz/api/AccessLog/log";
-const char* LogHandler::BATCH_LOG_ENDPOINT = "https://gym.pindej.cz/api/AccessLog/log-batch";
+const char* LogHandler::BATCH_LOG_ENDPOINT = "https://gym.pindej.cz/api/AccessLog/logbatch";
 const unsigned long LogHandler::PROCESS_INTERVAL = 60000; // 1 minute
 const size_t LogHandler::MAX_QUEUE_SIZE = 100;
 const size_t LogHandler::BATCH_SIZE = 10;

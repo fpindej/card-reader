@@ -6,4 +6,5 @@ public interface IAccessLogService
 {
     Task LogAccessAsync(string cardNumber, bool isSuccess, DateTime timestamp);
     Task<List<AccessLog>> GetAllLogsAsync();
+    Task LogAccessBatchAsync(IEnumerable<AccessLog> accessLogs);
 }

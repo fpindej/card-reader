@@ -6,4 +6,5 @@ public interface IAccessLogRepository
 {
     Task CreateAsync(AccessLog accessLog);
     Task<List<AccessLog>> GetAllAsync();
+    Task CreateBatchAsync(IEnumerable<AccessLog> accessLogs);
 }

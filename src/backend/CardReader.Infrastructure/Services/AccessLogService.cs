@@ -42,4 +42,19 @@ internal class AccessLogService : IAccessLogService
     {
         return await _accessLogRepository.GetAllAsync();
     }
+
+    public async Task LogAccessBatchAsync(IEnumerable<AccessLog> accessLogs)
+    {
+        try
+        {
+            await _uow.BeginTransactionAsync();
+            await _accessLogRepository.CreateBatchAsync(accessLogs);
+            await _uow.CommitTransactionAsync();
+        }
+        catch
+        {
+            await _uow.RollbackTransactionAsync();
+            throw;
+        }
+    }
 }

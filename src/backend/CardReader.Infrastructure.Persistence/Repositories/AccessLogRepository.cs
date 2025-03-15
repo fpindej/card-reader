@@ -22,4 +22,9 @@ internal class AccessLogRepository : IAccessLogRepository
     {
         return await _context.AccessLogs.ToListAsync();
     }
+
+    public Task CreateBatchAsync(IEnumerable<AccessLog> accessLogs)
+    {
+        return _context.AccessLogs.AddRangeAsync(accessLogs);
+    }
 }
