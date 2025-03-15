@@ -48,7 +48,7 @@ void WiFiManager::checkAndReconnect()
         lastReconnectAttempt = currentMillis;
     }
     
-    // If we just got connected, print the IP address
+    // If we just got connected, print the IP address and resynchronize the NTP
     static bool wasConnected = false;
     bool isNowConnected = isConnected();
     
@@ -56,6 +56,7 @@ void WiFiManager::checkAndReconnect()
         Serial.println("WiFi reconnected successfully");
         Serial.print("IP address: ");
         Serial.println(WiFi.localIP());
+        TimeManager::initialize();
     }
     
     wasConnected = isNowConnected;
