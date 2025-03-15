@@ -8,7 +8,7 @@ public:
     static void initialize();
     static bool isTimeSet();
     static void sync();
-    static String getCurrentUTCTime(); // Returns time in YYYY-MM-DD HH:MM:SS format
+    static String getCurrentUTCTime(); // Returns time in ISO 8601 format: YYYY-MM-DDThh:mm:ss.mmmZ
 
 private:
     static bool timeInitialized;

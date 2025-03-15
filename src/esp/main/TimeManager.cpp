@@ -44,7 +44,13 @@ String TimeManager::getCurrentUTCTime() {
         return "Failed to obtain time";
     }
     
-    char timeStringBuff[25];
-    strftime(timeStringBuff, sizeof(timeStringBuff), "%Y-%m-%d %H:%M:%S", &timeinfo);
-    return String(timeStringBuff);
+    char timeStringBuff[30];
+    strftime(timeStringBuff, sizeof(timeStringBuff), "%Y-%m-%dT%H:%M:%S", &timeinfo);
+    
+    // Add milliseconds and Z suffix
+    unsigned long milliseconds = millis() % 1000;
+    char fullTimeString[35];
+    snprintf(fullTimeString, sizeof(fullTimeString), "%s.%03luZ", timeStringBuff, milliseconds);
+    
+    return String(fullTimeString);
 }
