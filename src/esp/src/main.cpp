@@ -24,4 +24,6 @@ void loop()
     CardHandler::updateActiveCards();
     RFIDHandler::checkCard();
     RemoteHandler::handleClient();
+
+    delay(100);
 }
