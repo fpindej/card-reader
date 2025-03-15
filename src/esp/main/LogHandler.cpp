@@ -2,6 +2,7 @@
 #include "LogHandler.h"
 #include <HTTPClient.h>
 #include <WiFi.h>
+#include "TimeManager.h"
 
 const char* LogHandler::LOG_ENDPOINT = "https://gym.pindej.cz/api/AccessLog/log";
 
@@ -19,6 +20,7 @@ void LogHandler::logAccess(const String& cardNumber, bool isSuccessful) {
     JsonDocument doc;
     doc["cardNumber"] = cardNumber;
     doc["isSuccessful"] = isSuccessful;
+    doc["timestamp"] = TimeManager::getCurrentUTCTime();
 
     String jsonPayload;
     serializeJson(doc, jsonPayload);

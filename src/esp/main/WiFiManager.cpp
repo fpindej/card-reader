@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include "WiFiManager.h"
+#include "TimeManager.h"
 
 const char* WiFiManager::ssid = "<WIFI_SSID>";
 const char* WiFiManager::password = "<WIFI_PASSWORD>";
@@ -23,6 +24,8 @@ void WiFiManager::connect()
         Serial.println("\nWiFi connected");
         Serial.print("IP address: ");
         Serial.println(WiFi.localIP());
+
+        TimeManager::initialize();
     } else {
         Serial.println("\nWiFi connection failed");
     }
