@@ -39,9 +39,9 @@ public class AccessLogController : ControllerBase
 
     [HttpGet]
     [Route("getall")]
-    public async Task<IActionResult> GetAllLogs()
+    public async Task<IActionResult> GetAllLogs([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
-        var logs = await _accessLogService.GetAllLogsAsync();
+        var logs = await _accessLogService.GetAllLogsAsync(pageNumber, pageSize);
         return Ok(logs);
     }
 }

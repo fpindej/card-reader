@@ -38,9 +38,9 @@ internal class AccessLogService : IAccessLogService
         }
     }
 
-    public async Task<List<AccessLog>> GetAllLogsAsync()
+    public async Task<List<AccessLog>> GetAllLogsAsync(int pageNumber, int pageSize)
     {
-        return await _accessLogRepository.GetAllAsync();
+        return await _accessLogRepository.GetAllAsync(pageNumber, pageSize);
     }
 
     public async Task LogAccessBatchAsync(IEnumerable<AccessLog> accessLogs)

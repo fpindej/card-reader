@@ -1,5 +1,6 @@
 using CardReader.Application.Repositories;
 using CardReader.Domain;
+using CardReader.Infrastructure.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CardReader.Infrastructure.Persistence.Repositories;
@@ -18,9 +19,12 @@ internal class AccessLogRepository : IAccessLogRepository
         await _context.AccessLogs.AddAsync(accessLog);
     }
 
-    public async Task<List<AccessLog>> GetAllAsync()
+    public async Task<List<AccessLog>> GetAllAsync(int pageNumber, int pageSize)
     {
-        return await _context.AccessLogs.ToListAsync();
+        return await _context.AccessLogs
+            .OrderByDescending(x => x.EventDateTime)
+            .Paginate(pageNumber, pageSize)
+            .ToListAsync();
     }
 
     public Task CreateBatchAsync(IEnumerable<AccessLog> accessLogs)
