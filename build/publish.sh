@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ProjectPath="../src"
+ProjectPath="../src/backend"
 
 execute_command() {
     local command=$1

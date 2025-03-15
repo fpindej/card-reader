@@ -2,8 +2,8 @@
 
 # Parameters
 MigrationName=$1
-ProjectPath="../src/CardReader.Infrastructure.Persistence/CardReader.Infrastructure.Persistence.csproj"
-StartupProjectPath="../src/CardReader.WebApi/CardReader.WebApi.csproj"
+ProjectPath="../src/backend/CardReader.Infrastructure.Persistence/CardReader.Infrastructure.Persistence.csproj"
+StartupProjectPath="../src/backend/CardReader.WebApi/CardReader.WebApi.csproj"
 
 # Function to execute commands
 execute_command() {

@@ -1,7 +1,7 @@
 param(
     [string]$MigrationName,
-    [string]$ProjectPath = "..\src\CardReader.Infrastructure.Persistence\CardReader.Infrastructure.Persistence.csproj",
-    [string]$StartupProjectPath = "..\src\CardReader.WebApi\CardReader.WebApi.csproj"
+    [string]$ProjectPath = "..\src\backend\CardReader.Infrastructure.Persistence\CardReader.Infrastructure.Persistence.csproj",
+    [string]$StartupProjectPath = "..\src\backend\CardReader.WebApi\CardReader.WebApi.csproj"
 )
 
 function ExecuteCommand {

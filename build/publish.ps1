@@ -1,5 +1,5 @@
 param(
-    [string]$ProjectPath = "..\src"
+    [string]$ProjectPath = "..\src\backend"
 )
 
 function ExecuteCommand {

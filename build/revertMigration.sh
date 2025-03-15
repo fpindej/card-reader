@@ -1,7 +1,7 @@
 #!/bin/bash
 
-ProjectPath="../src/CardReader.Infrastructure.Persistence/CardReader.Infrastructure.Persistence.csproj"
-StartupProjectPath="../src/CardReader.WebApi/CardReader.WebApi.csproj"
+ProjectPath="../src/backend/CardReader.Infrastructure.Persistence/CardReader.Infrastructure.Persistence.csproj"
+StartupProjectPath="../src/backend/CardReader.WebApi/CardReader.WebApi.csproj"
 
 execute_command() {
     command=$1

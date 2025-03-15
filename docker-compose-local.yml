@@ -1,7 +1,7 @@
 services:
   card-reader-api:
     build:
-      context: ./src
+      context: ./src/backend
       dockerfile: CardReader.WebApi/Dockerfile
     container_name: card-reader-api
     environment:
