@@ -1,3 +1,9 @@
-﻿namespace CardReader.WebApi.Dtos;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record CustomerUpdateRequest(int Id, string? FirstName, string? LastName, string? Email);
+namespace CardReader.WebApi.Dtos;
+
+public record CustomerUpdateRequest(
+    [Required] int Id,
+    [MaxLength(50)] string? FirstName,
+    [MaxLength(50)] string? LastName,
+    [EmailAddress] string? Email);
