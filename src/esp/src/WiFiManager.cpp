@@ -3,8 +3,8 @@
 #include "TimeManager.h"
 #include "LogHandler.h"
 
-const char* WiFiManager::ssid = "<WIFI_SSID>";
-const char* WiFiManager::password = "<WIFI_PASSWORD>";
+const char* WiFiManager::ssid = "filipiphone";
+const char* WiFiManager::password = "Filisovo69";
 unsigned long WiFiManager::lastReconnectAttempt = 0;
 
 void WiFiManager::connect() 
