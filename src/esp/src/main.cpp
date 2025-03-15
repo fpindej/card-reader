@@ -6,6 +6,7 @@
 #include "RelayHandler.h"
 #include "RemoteHandler.h"
 #include "LogHandler.h"
+#include "HealthMonitor.h"
 
 void setup() 
 {
@@ -24,6 +25,7 @@ void loop()
     CardHandler::updateActiveCards();
     RFIDHandler::checkCard();
     RemoteHandler::handleClient();
+    HealthMonitor::reportMetrics();
 
     delay(100);
 }
