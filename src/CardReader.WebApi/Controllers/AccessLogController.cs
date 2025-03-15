@@ -19,8 +19,8 @@ public class AccessLogController : ControllerBase
     [Route("log")]
     public async Task<IActionResult> LogAccess([FromBody] AccessLogRequest request)
     {
-        await _accessLogService.LogAccessAsync(request.CardNumber, request.IsSuccessful);
-        return Ok(new { Message = "Access log created successfully." });
+        await _accessLogService.LogAccessAsync(request.CardNumber, request.IsSuccessful, request.Timestamp);
+        return Ok();
     }
 
     [HttpGet]

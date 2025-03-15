@@ -4,6 +4,6 @@ namespace CardReader.Application.Services;
 
 public interface IAccessLogService
 {
-    Task LogAccessAsync(string cardNumber, bool isSuccess);
+    Task LogAccessAsync(string cardNumber, bool isSuccess, DateTime timestamp);
     Task<List<AccessLog>> GetAllLogsAsync();
 }

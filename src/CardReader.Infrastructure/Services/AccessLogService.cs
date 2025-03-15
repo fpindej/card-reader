@@ -16,11 +16,11 @@ internal class AccessLogService : IAccessLogService
         _uow = uow;
     }
 
-    public async Task LogAccessAsync(string cardNumber, bool isSuccess)
+    public async Task LogAccessAsync(string cardNumber, bool isSuccess, DateTime timestamp)
     {
         var accessLog = new AccessLog
         {
-            EventDateTime = DateTime.UtcNow,
+            EventDateTime = timestamp,
             CardNumber = cardNumber,
             IsSuccessful = isSuccess
         };
