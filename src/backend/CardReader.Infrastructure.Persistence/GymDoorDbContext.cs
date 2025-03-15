@@ -10,6 +10,8 @@ internal class GymDoorDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Membership> Memberships { get; init; }
 
     public DbSet<AccessLog> AccessLogs { get; init; }
+    
+    public DbSet<DeviceHealth> DeviceHealths { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -67,6 +69,35 @@ internal class GymDoorDbContext(DbContextOptions options) : DbContext(options)
 
             builder.Property(a => a.IsSuccessful)
                 .IsRequired();
+        });
+
+        modelBuilder.Entity<DeviceHealth>(builder =>
+        {
+            builder.HasKey(d => d.Id);
+
+            builder.Property(d => d.Id)
+                .UseIdentityColumn();
+
+            builder.Property(d => d.DeviceId)
+                .IsRequired();
+
+            builder.Property(d => d.MaxAllocHeap)
+                .IsRequired();
+
+            builder.Property(d => d.MinFreeHeap)
+                .IsRequired();
+
+            builder.Property(d => d.FreeHeap)
+                .IsRequired();
+
+            builder.Property(d => d.Uptime)
+                .IsRequired();
+
+            builder.Property(d => d.FreeSketchSpace)
+                .IsRequired();
+            
+            builder.Property(d => d.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
     }
 }

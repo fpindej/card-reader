@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IMembershipService, MembershipService>();
         services.AddScoped<IAccessLogService, AccessLogService>();
+        services.AddScoped<IDeviceHealthService, DeviceHealthService>();
 
         return services;
     }

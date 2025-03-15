@@ -26,6 +26,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IMembershipRepository, MembershipRepository>();
         services.AddScoped<IAccessLogRepository, AccessLogRepository>();
+        services.AddScoped<IDeviceHealthRepository, DeviceHealthRepository>();
 
         return services;
     }
