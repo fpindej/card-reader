@@ -41,4 +41,9 @@ internal class DeviceHealthService : IDeviceHealthService
             throw;
         }
     }
+
+    public async Task<IEnumerable<DeviceHealth>> GetAllLogsAsync(int pageNumber, int pageSize)
+    {
+        return await _deviceHealthRepository.GetAllAsync(pageNumber, pageSize);
+    }
 }

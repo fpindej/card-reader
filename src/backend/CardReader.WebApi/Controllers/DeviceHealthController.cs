@@ -25,4 +25,13 @@ public class DeviceHealthController : ControllerBase
 
         return Ok();
     }
+
+    [HttpGet]
+    [Route("getall")]
+    public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    {
+        var logs = await _deviceHealthService.GetAllLogsAsync(pageNumber, pageSize);
+        
+        return Ok(logs);
+    }
 }
