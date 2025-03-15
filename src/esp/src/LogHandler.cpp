@@ -8,7 +8,7 @@
 const char* LogHandler::LOG_ENDPOINT = "https://gym.pindej.cz/api/AccessLog/log";
 const char* LogHandler::BATCH_LOG_ENDPOINT = "https://gym.pindej.cz/api/AccessLog/logbatch";
 const unsigned long LogHandler::PROCESS_INTERVAL = 60000; // 1 minute
-const size_t LogHandler::MAX_QUEUE_SIZE = 100;
+const size_t LogHandler::MAX_QUEUE_SIZE = 20;
 const size_t LogHandler::BATCH_SIZE = 10;
 
 std::vector<LogEntry> LogHandler::logQueue;
@@ -27,7 +27,7 @@ bool LogHandler::sendSingleLog(const LogEntry& entry) {
     http.begin(LOG_ENDPOINT);
     http.addHeader("Content-Type", "application/json");
 
-    JsonDocument doc;
+    StaticJsonDocument<200> doc;
     doc["cardNumber"] = entry.cardNumber;
     doc["isSuccessful"] = entry.isSuccessful;
     doc["timestamp"] = entry.timestamp;
@@ -59,7 +59,7 @@ bool LogHandler::sendBatchLogs(const std::vector<LogEntry>& entries) {
     http.begin(BATCH_LOG_ENDPOINT);
     http.addHeader("Content-Type", "application/json");
 
-    JsonDocument doc;
+    StaticJsonDocument<2000> doc;
     JsonArray logsArray = doc.to<JsonArray>();
 
     for (const auto& entry : entries) {

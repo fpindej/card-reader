@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #include "WiFiManager.h"
 #include "CardHandler.h"
 #include "RFIDHandler.h"
@@ -22,4 +24,6 @@ void loop()
     CardHandler::updateActiveCards();
     RFIDHandler::checkCard();
     RemoteHandler::handleClient();
+
+    delay(100);
 }

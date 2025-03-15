@@ -1,9 +1,10 @@
 #include "RemoteHandler.h"
 #include "RelayHandler.h"
+#include <.env.h>
 
 WebServer RemoteHandler::server(80);
-const char* RemoteHandler::loginUsername = "admin";
-const char* RemoteHandler::loginPassword = "password";
+const char* RemoteHandler::loginUsername = REMOTE_USERNAME;
+const char* RemoteHandler::loginPassword = REMOTE_PASSWORD;
 
 void RemoteHandler::init() {
     // Serve the login page
